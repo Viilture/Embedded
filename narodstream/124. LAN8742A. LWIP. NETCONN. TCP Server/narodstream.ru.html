@@ -1,0 +1,1655 @@
+<!DOCTYPE html>
+<!-- saved from url=(0069)https://narodstream.ru/stm-urok-124-lan8742a-lwip-netconn-tcp-server/ -->
+<html class=" js flexbox canvas canvastext webgl no-touch geolocation postmessage websqldatabase indexeddb hashchange history draganddrop websockets rgba hsla multiplebgs backgroundsize borderimage borderradius boxshadow textshadow opacity cssanimations csscolumns cssgradients cssreflections csstransforms csstransforms3d csstransitions fontface generatedcontent video audio localstorage sessionstorage webworkers no-applicationcache svg inlinesvg smil svgclippaths" lang="ru-RU" prefix="og: https://ogp.me/ns#"><!--<![endif]--><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<!--<meta name="yandex-verification" content="4ab8ea128f9d0310" />--?
+		<link rel="profile" href="https://gmpg.org/xfn/11"/>
+		<link rel="pingback" href="https://narodstream.ru/xmlrpc.php"/>
+		<title>STM Урок 124. LAN8742A. LWIP. NETCONN. TCP Server | Программирование микроконтроллеров</title>
+
+		<!-- All in One SEO 4.1.8 -->
+		<meta name="description" content="Переходим к следующему, более серьёзному типу соединения транспортного уровня - TCP (Transmission Control Protocol, протокол управления передачей). С данным протоколом мы уже встречались неоднократно. Поэтому, хоть он и является непростым, мы его изучили очень неплохо. Мы знаем, как именно происходит создание и разрыв соединения, знаем, как передаются пакеты TCP, как они делятся на сегменты. Поэтому работать нам">
+		<meta name="robots" content="max-image-preview:large">
+		<link rel="canonical" href="https://narodstream.ru/stm-urok-124-lan8742a-lwip-netconn-tcp-server/">
+		<meta property="og:locale" content="ru_RU">
+		<meta property="og:site_name" content="Программирование микроконтроллеров | Программирование микроконтроллеров и всё, что с этим связано">
+		<meta property="og:type" content="article">
+		<meta property="og:title" content="STM Урок 124. LAN8742A. LWIP. NETCONN. TCP Server | Программирование микроконтроллеров">
+		<meta property="og:description" content="Переходим к следующему, более серьёзному типу соединения транспортного уровня - TCP (Transmission Control Protocol, протокол управления передачей). С данным протоколом мы уже встречались неоднократно. Поэтому, хоть он и является непростым, мы его изучили очень неплохо. Мы знаем, как именно происходит создание и разрыв соединения, знаем, как передаются пакеты TCP, как они делятся на сегменты. Поэтому работать нам">
+		<meta property="og:url" content="https://narodstream.ru/stm-urok-124-lan8742a-lwip-netconn-tcp-server/">
+		<meta property="article:published_time" content="2018-07-10T12:11:27+00:00">
+		<meta property="article:modified_time" content="2018-07-19T14:37:21+00:00">
+		<meta name="twitter:card" content="summary">
+		<meta name="twitter:title" content="STM Урок 124. LAN8742A. LWIP. NETCONN. TCP Server | Программирование микроконтроллеров">
+		<meta name="twitter:description" content="Переходим к следующему, более серьёзному типу соединения транспортного уровня - TCP (Transmission Control Protocol, протокол управления передачей). С данным протоколом мы уже встречались неоднократно. Поэтому, хоть он и является непростым, мы его изучили очень неплохо. Мы знаем, как именно происходит создание и разрыв соединения, знаем, как передаются пакеты TCP, как они делятся на сегменты. Поэтому работать нам">
+		<meta name="google" content="nositelinkssearchbox">
+		<script type="text/javascript" async="" src="./narodstream.ru_files/watch.js.Без названия"></script><script type="text/javascript" src="./narodstream.ru_files/context.js.Без названия" async=""></script><script type="text/javascript" src="./narodstream.ru_files/context.js.Без названия" async=""></script><script type="text/javascript" src="./narodstream.ru_files/context.js.Без названия" async=""></script><script type="text/javascript" src="./narodstream.ru_files/context.js.Без названия" async=""></script><script type="application/ld+json" class="aioseo-schema">
+			{"@context":"https:\/\/schema.org","@graph":[{"@type":"WebSite","@id":"https:\/\/narodstream.ru\/#website","url":"https:\/\/narodstream.ru\/","name":"\u041f\u0440\u043e\u0433\u0440\u0430\u043c\u043c\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u0435 \u043c\u0438\u043a\u0440\u043e\u043a\u043e\u043d\u0442\u0440\u043e\u043b\u043b\u0435\u0440\u043e\u0432","description":"\u041f\u0440\u043e\u0433\u0440\u0430\u043c\u043c\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u0435 \u043c\u0438\u043a\u0440\u043e\u043a\u043e\u043d\u0442\u0440\u043e\u043b\u043b\u0435\u0440\u043e\u0432 \u0438 \u0432\u0441\u0451, \u0447\u0442\u043e \u0441 \u044d\u0442\u0438\u043c \u0441\u0432\u044f\u0437\u0430\u043d\u043e","inLanguage":"ru-RU","publisher":{"@id":"https:\/\/narodstream.ru\/#organization"}},{"@type":"Organization","@id":"https:\/\/narodstream.ru\/#organization","name":"\u041f\u0440\u043e\u0433\u0440\u0430\u043c\u043c\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u0435 \u043c\u0438\u043a\u0440\u043e\u043a\u043e\u043d\u0442\u0440\u043e\u043b\u043b\u0435\u0440\u043e\u0432","url":"https:\/\/narodstream.ru\/"},{"@type":"BreadcrumbList","@id":"https:\/\/narodstream.ru\/stm-urok-124-lan8742a-lwip-netconn-tcp-server\/#breadcrumblist","itemListElement":[{"@type":"ListItem","@id":"https:\/\/narodstream.ru\/#listItem","position":1,"item":{"@type":"WebPage","@id":"https:\/\/narodstream.ru\/","name":"\u0413\u043b\u0430\u0432\u043d\u0430\u044f","description":"\u041f\u0440\u043e\u0433\u0440\u0430\u043c\u043c\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u0435 \u043c\u0438\u043a\u0440\u043e\u043a\u043e\u043d\u0442\u0440\u043e\u043b\u043b\u0435\u0440\u043e\u0432 stm32, avr \u0438 \u0434\u0440\u0443\u0433\u0438\u0445 \u043d\u0430 \u0421\u0438 \u0434\u043b\u044f \u043d\u0430\u0447\u0438\u043d\u0430\u044e\u0449\u0438\u0445 \u0438 \u043d\u0435 \u0442\u043e\u043b\u044c\u043a\u043e. \u0420\u0430\u0437\u043b\u0438\u0447\u043d\u044b\u0435 \u043f\u0440\u043e\u0433\u0440\u0430\u043c\u043c\u044b \u0434\u043b\u044f \u043f\u0440\u043e\u0433\u0440\u0430\u043c\u043c\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u044f \u043c\u0438\u043a\u0440\u043e\u043a\u043e\u043d\u0442\u0440\u043e\u043b\u043b\u0435\u0440\u043e\u0432.","url":"https:\/\/narodstream.ru\/"},"nextItem":"https:\/\/narodstream.ru\/stm-urok-124-lan8742a-lwip-netconn-tcp-server\/#listItem"},{"@type":"ListItem","@id":"https:\/\/narodstream.ru\/stm-urok-124-lan8742a-lwip-netconn-tcp-server\/#listItem","position":2,"item":{"@type":"WebPage","@id":"https:\/\/narodstream.ru\/stm-urok-124-lan8742a-lwip-netconn-tcp-server\/","name":"STM \u0423\u0440\u043e\u043a 124. LAN8742A. LWIP. NETCONN. TCP Server","description":"\u041f\u0435\u0440\u0435\u0445\u043e\u0434\u0438\u043c \u043a \u0441\u043b\u0435\u0434\u0443\u044e\u0449\u0435\u043c\u0443, \u0431\u043e\u043b\u0435\u0435 \u0441\u0435\u0440\u044c\u0451\u0437\u043d\u043e\u043c\u0443 \u0442\u0438\u043f\u0443 \u0441\u043e\u0435\u0434\u0438\u043d\u0435\u043d\u0438\u044f \u0442\u0440\u0430\u043d\u0441\u043f\u043e\u0440\u0442\u043d\u043e\u0433\u043e \u0443\u0440\u043e\u0432\u043d\u044f - TCP (Transmission Control Protocol, \u043f\u0440\u043e\u0442\u043e\u043a\u043e\u043b \u0443\u043f\u0440\u0430\u0432\u043b\u0435\u043d\u0438\u044f \u043f\u0435\u0440\u0435\u0434\u0430\u0447\u0435\u0439). \u0421 \u0434\u0430\u043d\u043d\u044b\u043c \u043f\u0440\u043e\u0442\u043e\u043a\u043e\u043b\u043e\u043c \u043c\u044b \u0443\u0436\u0435 \u0432\u0441\u0442\u0440\u0435\u0447\u0430\u043b\u0438\u0441\u044c \u043d\u0435\u043e\u0434\u043d\u043e\u043a\u0440\u0430\u0442\u043d\u043e. \u041f\u043e\u044d\u0442\u043e\u043c\u0443, \u0445\u043e\u0442\u044c \u043e\u043d \u0438 \u044f\u0432\u043b\u044f\u0435\u0442\u0441\u044f \u043d\u0435\u043f\u0440\u043e\u0441\u0442\u044b\u043c, \u043c\u044b \u0435\u0433\u043e \u0438\u0437\u0443\u0447\u0438\u043b\u0438 \u043e\u0447\u0435\u043d\u044c \u043d\u0435\u043f\u043b\u043e\u0445\u043e. \u041c\u044b \u0437\u043d\u0430\u0435\u043c, \u043a\u0430\u043a \u0438\u043c\u0435\u043d\u043d\u043e \u043f\u0440\u043e\u0438\u0441\u0445\u043e\u0434\u0438\u0442 \u0441\u043e\u0437\u0434\u0430\u043d\u0438\u0435 \u0438 \u0440\u0430\u0437\u0440\u044b\u0432 \u0441\u043e\u0435\u0434\u0438\u043d\u0435\u043d\u0438\u044f, \u0437\u043d\u0430\u0435\u043c, \u043a\u0430\u043a \u043f\u0435\u0440\u0435\u0434\u0430\u044e\u0442\u0441\u044f \u043f\u0430\u043a\u0435\u0442\u044b TCP, \u043a\u0430\u043a \u043e\u043d\u0438 \u0434\u0435\u043b\u044f\u0442\u0441\u044f \u043d\u0430 \u0441\u0435\u0433\u043c\u0435\u043d\u0442\u044b. \u041f\u043e\u044d\u0442\u043e\u043c\u0443 \u0440\u0430\u0431\u043e\u0442\u0430\u0442\u044c \u043d\u0430\u043c","url":"https:\/\/narodstream.ru\/stm-urok-124-lan8742a-lwip-netconn-tcp-server\/"},"previousItem":"https:\/\/narodstream.ru\/#listItem"}]},{"@type":"Person","@id":"https:\/\/narodstream.ru\/author\/admin\/#author","url":"https:\/\/narodstream.ru\/author\/admin\/","name":"Narod Stream","image":{"@type":"ImageObject","@id":"https:\/\/narodstream.ru\/stm-urok-124-lan8742a-lwip-netconn-tcp-server\/#authorImage","url":"https:\/\/secure.gravatar.com\/avatar\/4824b24065500834db4b9f331b608833?s=96&d=mm&r=g","width":96,"height":96,"caption":"Narod Stream"}},{"@type":"WebPage","@id":"https:\/\/narodstream.ru\/stm-urok-124-lan8742a-lwip-netconn-tcp-server\/#webpage","url":"https:\/\/narodstream.ru\/stm-urok-124-lan8742a-lwip-netconn-tcp-server\/","name":"STM \u0423\u0440\u043e\u043a 124. LAN8742A. LWIP. NETCONN. TCP Server | \u041f\u0440\u043e\u0433\u0440\u0430\u043c\u043c\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u0435 \u043c\u0438\u043a\u0440\u043e\u043a\u043e\u043d\u0442\u0440\u043e\u043b\u043b\u0435\u0440\u043e\u0432","description":"\u041f\u0435\u0440\u0435\u0445\u043e\u0434\u0438\u043c \u043a \u0441\u043b\u0435\u0434\u0443\u044e\u0449\u0435\u043c\u0443, \u0431\u043e\u043b\u0435\u0435 \u0441\u0435\u0440\u044c\u0451\u0437\u043d\u043e\u043c\u0443 \u0442\u0438\u043f\u0443 \u0441\u043e\u0435\u0434\u0438\u043d\u0435\u043d\u0438\u044f \u0442\u0440\u0430\u043d\u0441\u043f\u043e\u0440\u0442\u043d\u043e\u0433\u043e \u0443\u0440\u043e\u0432\u043d\u044f - TCP (Transmission Control Protocol, \u043f\u0440\u043e\u0442\u043e\u043a\u043e\u043b \u0443\u043f\u0440\u0430\u0432\u043b\u0435\u043d\u0438\u044f \u043f\u0435\u0440\u0435\u0434\u0430\u0447\u0435\u0439). \u0421 \u0434\u0430\u043d\u043d\u044b\u043c \u043f\u0440\u043e\u0442\u043e\u043a\u043e\u043b\u043e\u043c \u043c\u044b \u0443\u0436\u0435 \u0432\u0441\u0442\u0440\u0435\u0447\u0430\u043b\u0438\u0441\u044c \u043d\u0435\u043e\u0434\u043d\u043e\u043a\u0440\u0430\u0442\u043d\u043e. \u041f\u043e\u044d\u0442\u043e\u043c\u0443, \u0445\u043e\u0442\u044c \u043e\u043d \u0438 \u044f\u0432\u043b\u044f\u0435\u0442\u0441\u044f \u043d\u0435\u043f\u0440\u043e\u0441\u0442\u044b\u043c, \u043c\u044b \u0435\u0433\u043e \u0438\u0437\u0443\u0447\u0438\u043b\u0438 \u043e\u0447\u0435\u043d\u044c \u043d\u0435\u043f\u043b\u043e\u0445\u043e. \u041c\u044b \u0437\u043d\u0430\u0435\u043c, \u043a\u0430\u043a \u0438\u043c\u0435\u043d\u043d\u043e \u043f\u0440\u043e\u0438\u0441\u0445\u043e\u0434\u0438\u0442 \u0441\u043e\u0437\u0434\u0430\u043d\u0438\u0435 \u0438 \u0440\u0430\u0437\u0440\u044b\u0432 \u0441\u043e\u0435\u0434\u0438\u043d\u0435\u043d\u0438\u044f, \u0437\u043d\u0430\u0435\u043c, \u043a\u0430\u043a \u043f\u0435\u0440\u0435\u0434\u0430\u044e\u0442\u0441\u044f \u043f\u0430\u043a\u0435\u0442\u044b TCP, \u043a\u0430\u043a \u043e\u043d\u0438 \u0434\u0435\u043b\u044f\u0442\u0441\u044f \u043d\u0430 \u0441\u0435\u0433\u043c\u0435\u043d\u0442\u044b. \u041f\u043e\u044d\u0442\u043e\u043c\u0443 \u0440\u0430\u0431\u043e\u0442\u0430\u0442\u044c \u043d\u0430\u043c","inLanguage":"ru-RU","isPartOf":{"@id":"https:\/\/narodstream.ru\/#website"},"breadcrumb":{"@id":"https:\/\/narodstream.ru\/stm-urok-124-lan8742a-lwip-netconn-tcp-server\/#breadcrumblist"},"author":"https:\/\/narodstream.ru\/author\/admin\/#author","creator":"https:\/\/narodstream.ru\/author\/admin\/#author","image":{"@type":"ImageObject","@id":"https:\/\/narodstream.ru\/#mainImage","url":"https:\/\/narodstream.ru\/wp-content\/uploads\/2018\/06\/stm124img14.jpg","width":250,"height":148},"primaryImageOfPage":{"@id":"https:\/\/narodstream.ru\/stm-urok-124-lan8742a-lwip-netconn-tcp-server\/#mainImage"},"datePublished":"2018-07-10T12:11:27+00:00","dateModified":"2018-07-19T14:37:21+00:00"},{"@type":"Article","@id":"https:\/\/narodstream.ru\/stm-urok-124-lan8742a-lwip-netconn-tcp-server\/#article","name":"STM \u0423\u0440\u043e\u043a 124. LAN8742A. LWIP. NETCONN. TCP Server | \u041f\u0440\u043e\u0433\u0440\u0430\u043c\u043c\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u0435 \u043c\u0438\u043a\u0440\u043e\u043a\u043e\u043d\u0442\u0440\u043e\u043b\u043b\u0435\u0440\u043e\u0432","description":"\u041f\u0435\u0440\u0435\u0445\u043e\u0434\u0438\u043c \u043a \u0441\u043b\u0435\u0434\u0443\u044e\u0449\u0435\u043c\u0443, \u0431\u043e\u043b\u0435\u0435 \u0441\u0435\u0440\u044c\u0451\u0437\u043d\u043e\u043c\u0443 \u0442\u0438\u043f\u0443 \u0441\u043e\u0435\u0434\u0438\u043d\u0435\u043d\u0438\u044f \u0442\u0440\u0430\u043d\u0441\u043f\u043e\u0440\u0442\u043d\u043e\u0433\u043e \u0443\u0440\u043e\u0432\u043d\u044f - TCP (Transmission Control Protocol, \u043f\u0440\u043e\u0442\u043e\u043a\u043e\u043b \u0443\u043f\u0440\u0430\u0432\u043b\u0435\u043d\u0438\u044f \u043f\u0435\u0440\u0435\u0434\u0430\u0447\u0435\u0439). \u0421 \u0434\u0430\u043d\u043d\u044b\u043c \u043f\u0440\u043e\u0442\u043e\u043a\u043e\u043b\u043e\u043c \u043c\u044b \u0443\u0436\u0435 \u0432\u0441\u0442\u0440\u0435\u0447\u0430\u043b\u0438\u0441\u044c \u043d\u0435\u043e\u0434\u043d\u043e\u043a\u0440\u0430\u0442\u043d\u043e. \u041f\u043e\u044d\u0442\u043e\u043c\u0443, \u0445\u043e\u0442\u044c \u043e\u043d \u0438 \u044f\u0432\u043b\u044f\u0435\u0442\u0441\u044f \u043d\u0435\u043f\u0440\u043e\u0441\u0442\u044b\u043c, \u043c\u044b \u0435\u0433\u043e \u0438\u0437\u0443\u0447\u0438\u043b\u0438 \u043e\u0447\u0435\u043d\u044c \u043d\u0435\u043f\u043b\u043e\u0445\u043e. \u041c\u044b \u0437\u043d\u0430\u0435\u043c, \u043a\u0430\u043a \u0438\u043c\u0435\u043d\u043d\u043e \u043f\u0440\u043e\u0438\u0441\u0445\u043e\u0434\u0438\u0442 \u0441\u043e\u0437\u0434\u0430\u043d\u0438\u0435 \u0438 \u0440\u0430\u0437\u0440\u044b\u0432 \u0441\u043e\u0435\u0434\u0438\u043d\u0435\u043d\u0438\u044f, \u0437\u043d\u0430\u0435\u043c, \u043a\u0430\u043a \u043f\u0435\u0440\u0435\u0434\u0430\u044e\u0442\u0441\u044f \u043f\u0430\u043a\u0435\u0442\u044b TCP, \u043a\u0430\u043a \u043e\u043d\u0438 \u0434\u0435\u043b\u044f\u0442\u0441\u044f \u043d\u0430 \u0441\u0435\u0433\u043c\u0435\u043d\u0442\u044b. \u041f\u043e\u044d\u0442\u043e\u043c\u0443 \u0440\u0430\u0431\u043e\u0442\u0430\u0442\u044c \u043d\u0430\u043c","inLanguage":"ru-RU","headline":"STM \u0423\u0440\u043e\u043a 124. LAN8742A. LWIP. NETCONN. TCP Server","author":{"@id":"https:\/\/narodstream.ru\/author\/admin\/#author"},"publisher":{"@id":"https:\/\/narodstream.ru\/#organization"},"datePublished":"2018-07-10T12:11:27+00:00","dateModified":"2018-07-19T14:37:21+00:00","commentCount":"8","articleSection":"LAN, \u041f\u0440\u043e\u0433\u0440\u0430\u043c\u043c\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u0435 STM32","mainEntityOfPage":{"@id":"https:\/\/narodstream.ru\/stm-urok-124-lan8742a-lwip-netconn-tcp-server\/#webpage"},"isPartOf":{"@id":"https:\/\/narodstream.ru\/stm-urok-124-lan8742a-lwip-netconn-tcp-server\/#webpage"},"image":{"@type":"ImageObject","@id":"https:\/\/narodstream.ru\/#articleImage","url":"https:\/\/narodstream.ru\/wp-content\/uploads\/2018\/06\/stm124img14.jpg","width":250,"height":148}}]}
+		</script>
+		<!-- All in One SEO -->
+
+<link rel="dns-prefetch" href="https://s.w.org/">
+<link rel="alternate" type="application/rss+xml" title="Программирование микроконтроллеров » Лента" href="https://narodstream.ru/feed/">
+<link rel="alternate" type="application/rss+xml" title="Программирование микроконтроллеров » Лента комментариев" href="https://narodstream.ru/comments/feed/">
+<link rel="alternate" type="application/rss+xml" title="Программирование микроконтроллеров » Лента комментариев к «STM Урок 124. LAN8742A. LWIP. NETCONN. TCP Server»" href="https://narodstream.ru/stm-urok-124-lan8742a-lwip-netconn-tcp-server/feed/">
+		<script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/11\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/11\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/narodstream.ru\/wp-includes\/js\/wp-emoji-release.min.js?ver=4.9.20"}};
+			!function(e,a,t){var n,r,o,i=a.createElement("canvas"),p=i.getContext&&i.getContext("2d");function s(e,t){var a=String.fromCharCode;p.clearRect(0,0,i.width,i.height),p.fillText(a.apply(this,e),0,0);e=i.toDataURL();return p.clearRect(0,0,i.width,i.height),p.fillText(a.apply(this,t),0,0),e===i.toDataURL()}function c(e){var t=a.createElement("script");t.src=e,t.defer=t.type="text/javascript",a.getElementsByTagName("head")[0].appendChild(t)}for(o=Array("flag","emoji"),t.supports={everything:!0,everythingExceptFlag:!0},r=0;r<o.length;r++)t.supports[o[r]]=function(e){if(!p||!p.fillText)return!1;switch(p.textBaseline="top",p.font="600 32px Arial",e){case"flag":return s([55356,56826,55356,56819],[55356,56826,8203,55356,56819])?!1:!s([55356,57332,56128,56423,56128,56418,56128,56421,56128,56430,56128,56423,56128,56447],[55356,57332,8203,56128,56423,8203,56128,56418,8203,56128,56421,8203,56128,56430,8203,56128,56423,8203,56128,56447]);case"emoji":return!s([55358,56760,9792,65039],[55358,56760,8203,9792,65039])}return!1}(o[r]),t.supports.everything=t.supports.everything&&t.supports[o[r]],"flag"!==o[r]&&(t.supports.everythingExceptFlag=t.supports.everythingExceptFlag&&t.supports[o[r]]);t.supports.everythingExceptFlag=t.supports.everythingExceptFlag&&!t.supports.flag,t.DOMReady=!1,t.readyCallback=function(){t.DOMReady=!0},t.supports.everything||(n=function(){t.readyCallback()},a.addEventListener?(a.addEventListener("DOMContentLoaded",n,!1),e.addEventListener("load",n,!1)):(e.attachEvent("onload",n),a.attachEvent("onreadystatechange",function(){"complete"===a.readyState&&t.readyCallback()})),(n=t.source||{}).concatemoji?c(n.concatemoji):n.wpemoji&&n.twemoji&&(c(n.twemoji),c(n.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script><script src="./narodstream.ru_files/wp-emoji-release.min.js.Без названия" type="text/javascript" defer=""></script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+<link rel="stylesheet" id="crayon-css" href="./narodstream.ru_files/crayon.min.css" type="text/css" media="all">
+<link rel="stylesheet" id="bbpress_new_ui-css" href="./narodstream.ru_files/light.css" type="text/css" media="all">
+<link rel="stylesheet" id="bbp-default-css" href="./narodstream.ru_files/bbpress.min.css" type="text/css" media="all">
+<link rel="stylesheet" id="cptch_stylesheet-css" href="./narodstream.ru_files/front_end_style.css" type="text/css" media="all">
+<link rel="stylesheet" id="dashicons-css" href="./narodstream.ru_files/dashicons.min.css" type="text/css" media="all">
+<link rel="stylesheet" id="cptch_desktop_style-css" href="./narodstream.ru_files/desktop_style.css" type="text/css" media="all">
+<link rel="stylesheet" id="post-views-counter-frontend-css" href="./narodstream.ru_files/frontend.css" type="text/css" media="all">
+<link rel="stylesheet" id="responsive-style-css" href="./narodstream.ru_files/style.min.css" type="text/css" media="all">
+<link rel="stylesheet" id="responsive-child-style-css" href="./narodstream.ru_files/style.css" type="text/css" media="all">
+<link rel="stylesheet" id="fontawesome-style-css" href="./narodstream.ru_files/font-awesome.min.css" type="text/css" media="all">
+<script type="text/javascript" src="./narodstream.ru_files/jquery.js.Без названия"></script>
+<script type="text/javascript" src="./narodstream.ru_files/jquery-migrate.min.js.Без названия"></script>
+<script type="text/javascript">
+/* <![CDATA[ */
+var CrayonSyntaxSettings = {"version":"_2.7.2_beta","is_admin":"0","ajaxurl":"https:\/\/narodstream.ru\/wp-admin\/admin-ajax.php","prefix":"crayon-","setting":"crayon-setting","selected":"crayon-setting-selected","changed":"crayon-setting-changed","special":"crayon-setting-special","orig_value":"data-orig-value","debug":""};
+var CrayonSyntaxStrings = {"copy":"Press %s to Copy, %s to Paste","minimize":"Click To Expand Code"};
+/* ]]> */
+</script>
+<script type="text/javascript" src="./narodstream.ru_files/crayon.min.js.Без названия"></script>
+<script type="text/javascript" src="./narodstream.ru_files/responsive-modernizr.min.js.Без названия"></script>
+<link rel="https://api.w.org/" href="https://narodstream.ru/wp-json/">
+<link rel="prev" title="PIC. Урок 17. MSSP. SPI. Внешний АЦП MCP 3201. Часть 2" href="https://narodstream.ru/pic-urok-17-mssp-spi-vneshnij-acp-mcp-3201-chast-2/">
+<link rel="next" title="PIC. Урок 18. MSSP. SPI. SLAVE. Соединяем два контроллера. Часть 1" href="https://narodstream.ru/pic-urok-18-mssp-spi-slave-soedinyaem-dva-kontrollera-chast-1/">
+<meta name="generator" content="WordPress 4.9.20">
+<link rel="shortlink" href="https://narodstream.ru/?p=15671">
+<link rel="alternate" type="application/json+oembed" href="https://narodstream.ru/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fnarodstream.ru%2Fstm-urok-124-lan8742a-lwip-netconn-tcp-server%2F">
+<link rel="alternate" type="text/xml+oembed" href="https://narodstream.ru/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fnarodstream.ru%2Fstm-urok-124-lan8742a-lwip-netconn-tcp-server%2F&amp;format=xml">
+
+<link rel="stylesheet" href="./narodstream.ru_files/highslide.css" type="text/css">
+<script type="text/javascript" src="./narodstream.ru_files/highslide-with-html.packed.js.Без названия"></script>
+<script type="text/javascript">
+	hs.graphicsDir = "https://narodstream.ru/wp-content/plugins/auto-highslide/highslide/graphics/";
+	hs.outlineType = "rounded-white";
+	hs.outlineWhileAnimating = true;
+	hs.showCredits = false;
+</script>
+		<script>
+		jQuery(document).ready(function(){
+		var copyright_text = "Narod Stream";
+		var cyberchimps_link = "";
+		var siteurl = "https://narodstream.ru"; 
+		if(copyright_text == "")
+		{
+			jQuery(".copyright #copyright_link").text(" "+"Default copyright text");
+		}
+		else{ 
+			jQuery(".copyright #copyright_link").text(" "+copyright_text);
+		}
+		jQuery(".copyright #copyright_link").attr('href',siteurl);
+		if(cyberchimps_link == 1)
+		{
+			jQuery(".powered").css("display","block");
+		}
+		else{
+			jQuery(".powered").css("display","none");
+		}
+		});
+	</script>
+<!-- We need this for debugging -->
+<!-- Responsive 3.6 -->
+<!-- Моя дочерняя тема 1.0 -->
+<style type="text/css" id="custom-background-css">
+body.custom-background { background-image: url("https://narodstream.ru/wp-content/uploads/2017/10/Image0111.png"); background-position: left top; background-size: auto; background-repeat: repeat; background-attachment: scroll; }
+</style>
+<link rel="icon" href="https://narodstream.ru/wp-content/uploads/2016/11/cropped-nstream-32x32.png" sizes="32x32">
+<link rel="icon" href="https://narodstream.ru/wp-content/uploads/2016/11/cropped-nstream-192x192.png" sizes="192x192">
+<link rel="apple-touch-icon-precomposed" href="https://narodstream.ru/wp-content/uploads/2016/11/cropped-nstream-180x180.png">
+<meta name="msapplication-TileImage" content="https://narodstream.ru/wp-content/uploads/2016/11/cropped-nstream-270x270.png">
+<style id="sccss">p{padding:0 0 0 0;;margin:0}
+
+p.MyNormal
+{
+  	font-weight: normal 
+	margin-top:0cm;
+	margin-right:0cm;
+	margin-bottom:0cm;
+	margin-left:0cm;
+    font-family:"Times New Roman";
+  	font-size:12pt;
+  	text-indent: 20px;
+}
+
+p.MyNormalJustify
+{
+  	font-weight: normal 
+	margin-top:0cm;
+	margin-right:0cm;
+	margin-bottom:0cm;
+	margin-left:0cm;
+    font-family:"Times New Roman";
+  	font-size:12pt;
+  	text-indent: 20px;
+  	text-align:justify;
+}
+
+p.MyNoIndent
+{
+  	font-weight: normal 
+	margin-top:0cm;
+	margin-right:0cm;
+	margin-bottom:0cm;
+	margin-left:0cm;
+    font-family:"Times New Roman";
+  	font-size:12pt;
+}
+
+p.MyCenter
+{
+  	font-weight: normal 
+	margin-top:0cm;
+	margin-right:0cm;
+	margin-bottom:0cm;
+	margin-left:0cm;
+  	text-align: center;
+    font-family:"Times New Roman";
+  	font-size:12pt;
+}
+
+p.MyNormalSmall
+{
+  	font-weight: normal 
+	margin-top:0cm;
+	margin-right:0cm;
+	margin-bottom:0cm;
+	margin-left:0cm;
+    font-family:"Times New Roman";
+  	font-size:8pt;
+  	text-indent: 10px;
+}
+
+.SpanBold
+{
+  padding-bottom:0pt;
+  line-height:1.0;
+  orphans:2;
+  widows:2;
+  font-weight: bold;
+}
+
+.SpanNormal
+{
+  padding-bottom:0pt;
+  line-height:1.0;
+  orphans:2;
+  widows:2;
+  font-weight:400;
+}
+
+.SpanThrough
+{
+  padding-bottom:0pt;
+  line-height:1.0;
+  orphans:2;
+  widows:2;
+  font-weight: normal;
+  text-decoration:line-through;
+  height:11pt
+}
+
+.c1{
+  padding-bottom:0pt;
+  line-height:1.0;
+  orphans:2;
+  widows:2;
+  font-weight: bold;
+  height:11pt
+}
+
+.c2{
+  padding-bottom:0pt;
+  line-height:1.0;
+  font-size:12pt;
+  font-family:"Times New Roman";
+  margin-top:0cm;
+  margin-right:0cm;
+  margin-bottom:0cm;
+  margin-left:0cm;
+  text-indent: 20px;
+  orphans:2;
+  widows:2
+}
+
+.c5{
+	background-color:#ffffff;
+	max-width:708.8pt;
+	padding:35.5pt 26.6pt 30.9pt 56.7pt
+}
+
+.c8{
+	font-size:11pt;
+	font-family:"Calibri";font-weight:400
+}
+
+.c11{
+	color:#0563c1;
+	text-decoration:underline
+}
+
+.c6{
+	color:inherit;
+	text-decoration:inherit
+}
+
+.c0{
+	font-size:14pt;
+  	margin-top:0cm;
+  	margin-right:0cm;
+  	margin-bottom:0cm;
+  	margin-left:0cm;
+	font-family:"Times New Roman"
+}
+
+.c9{
+	font-size:16pt;
+	font-family:"Courier New"
+}
+
+.c10{
+	color:#000000
+}
+
+.c4{
+	text-align:center
+}
+
+.c7{
+ 	font-size:14pt;
+  	margin-top:0cm;
+  	margin-right:0cm;
+  	margin-bottom:0cm;
+  	margin-left:0cm;
+   	text-indent: 20px;
+	font-family:"Times New Roman"
+}
+
+.c3{
+}
+
+.okno {
+display: inline; 
+width: 100%;
+}
+
+.okno1 {
+float: left; 
+font-family: Verdana; 
+padding: 10px; 
+font-size: 14px; 
+margin: 3px 3px 3px 5px; 
+width: 170px; 
+height: 200px; 
+border-radius: 5px; 
+box-shadow: rgba(0,0,0,5.2) 0px 1px 3px;
+}
+
+.window1 {
+float: left; 
+position: absolut;
+font-family: Verdana; 
+padding: 10px; 
+font-size: 14px; 
+margin: 3px 3px 3px 5px; 
+width: 244px; 
+height: 136px;
+border-radius: 5px; 
+box-shadow: rgba(0,0,0,5.2) 0px 1px 3px;
+}
+
+.box01{
+  position:relative;
+  top: 50px;
+  left: 100px;
+  width:48px; /* Ширина */
+  height: 36px;  /* Высота */                
+}
+
+.box01 img {
+  position:absolute; /* абсолютное позиционирование*/
+  left: 0; /* выравниваем картинки по левому верхнему углу div-а*/
+  top: 0; /* выравниваем картинки по левому верхнему углу div-а */  
+}
+
+.box01 img.pic01 { /* первая картинка полностью прозрачная */
+  opacity:0;
+  filter:alpha (opacity=0);
+}
+
+.box01:hover img.pic01 { /* при наведении курсора первая картинка становится не прозрачной */
+  opacity:1;
+  filter:alpha (opacity=100);
+}
+
+.box01:hover img.pic02, .animate2 img.pic02:hover { /* а вторая при наведении курсора становится прозрачной */
+  opacity:0;
+  filter:alpha (opacity=0);
+ transition: all 0.5s ease;
+}
+
+a.button002 {
+background:    #c2185b;
+background:    -webkit-linear-gradient(#002288, #0055aa 50%, #002288);
+background:    linear-gradient(#002288, #0055aa 50%, #002288);
+border:        1px solid #569;
+border-radius: 999px;
+box-shadow:    0 1px 0 0 #880e4f;
+display:       inline-block;
+padding:       5px 20px;
+font:          italic 400 20px/1 "Calibri", sans-serif;
+color:         #fff;
+text-align:    center;
+text-shadow:   2px 2px 0 #880e4f;
+width:130px;
+-webkit-transition: All 0.7s ease;
+-moz-transition: All 0.7s ease;
+-o-transition: All 0.7s ease;
+-ms-transition: All 0.7s ease;
+transition: All 0.7s ease;
+}
+
+a.button002:hover {
+background:    #0099ff;
+color: #f99;
+}
+
+a.button002:active { background: rgb(152,15,0); } /* при нажатии */
+
+a.button001 {
+background:    #c2185b;
+background:    -webkit-linear-gradient(#002288, #0055aa 50%, #002288);
+background:    linear-gradient(#002288, #0055aa 50%, #002288);
+border:        1px solid #569;
+border-radius: 999px;
+box-shadow:    0 1px 0 0 #880e4f;
+display:       inline-block;
+padding:       5px 20px;
+font:          italic 400 20px/1 "Calibri", sans-serif;
+color:         #fff;
+text-align:    center;
+text-shadow:   2px 2px 0 #880e4f;
+width:200px;
+-webkit-transition: All 0.7s ease;
+-moz-transition: All 0.7s ease;
+-o-transition: All 0.7s ease;
+-ms-transition: All 0.7s ease;
+transition: All 0.7s ease;
+}
+
+a.button001:hover {
+background:    #0099ff;
+color: #f99;
+}
+
+a.button001:active { background: rgb(152,15,0); } /* при нажатии */
+
+.mainbox{
+
+}
+
+.lessonbox{
+     position: relative; /* Относительное позиционирование */
+     float: left; /* Совмещение колонок по горизонтали */
+     left: 0; /* Положение левого края */
+     top: 0; /* Положение верхнего края */
+     width: 280px; /* Ширина слоя */
+     height: 170px; /* Высота слоя */
+     color: white; /* Цвет текста */
+     background-clip: border-box; /* Фон растягивается */
+     background-size: cover;
+     background-size: contain;
+     background-repeat: no-repeat;
+}
+
+.ybut01{
+    position: relative; /* Относительное позиционирование */
+    float: left; /* Совмещение колонок по горизонтали */
+     left: -160px; /* Положение левого края */
+     top: 65px; /* Положение верхнего края */
+     width: 40px; /* Ширина слоя */
+     height: 40px; /* Высота слоя */
+     -webkit-transition: All 0.3s ease;
+     -moz-transition: All 0.3s ease;
+     -o-transition: All 0.3s ease;
+     -ms-transition: All 0.3s ease;
+     transition: All 0.3s ease;
+}
+
+a.ybutref {
+ opacity: 0.7;  
+}
+
+a.ybutref:hover {
+ opacity: 1.0;  
+}
+
+/*для многочастных уроков*/
+
+.nav01 {
+    background-color: #FFFFDD;
+    margin: 0px;
+    padding: 0px;
+}
+
+.nav01 li
+{
+    list-style: none;
+}
+
+.nav01 li a
+{
+    text-decoration: none;
+    display: block;
+    padding: 5px 0 5px 8px;
+    color: #335577;
+    border-bottom: 1px dotted #FF55FF;
+}
+
+.nav01 li a:hover
+{
+    background-color: #00FFFF;
+}
+
+#text-13{
+	//position: fixed;
+  	top: 0px;
+  	z-index: 10;
+}
+
+#nav {
+    background-color: #FFFFDD;
+    margin: 0px;
+    padding: 0px;
+}
+
+#nav li
+{
+    list-style: none;
+}
+
+#nav li a
+{
+    text-decoration: none;
+    display: block;
+    padding: 5px 0 5px 8px;
+    color: #335577;
+    border-bottom: 1px dotted #FF55FF;
+}
+
+#nav li a:hover
+{
+    background-color: #00FFFF;
+}
+
+#nav li:hover ul
+{
+    display: block;
+    margin-left: 50px;
+  	transition: all 0.5s ease;
+}
+
+#subnav {
+    background-color: #99FF99;
+    color: #777733;
+    list-style: none outside none;
+    display: none;
+    margin: 0px;
+    padding: 0px;
+    width: 216px;
+  	transition: all 0.5s ease;
+}
+
+.spoiler-wrap {
+  	min-height: 25px;
+	border: 1px solid #3b6d3d;
+	background: #66bb99
+}
+.spoiler-head {
+	margin-left: 5px;
+	padding: 5px 15px;
+	font-size: 14px;
+  	font-weight:700;
+	line-height: 18px;
+	cursor: pointer;
+}
+.folded {
+	display: block;
+	padding-left: 15px;
+	background: url(/images/plus.gif) no-repeat left center;
+}
+.unfolded {
+	display: block;
+	padding-left: 15px;
+	background: url(/images/minus.gif) no-repeat left center;
+}
+.spoiler-body {
+	padding: 5px;
+	border-top: 1px solid #3b6d3d;
+	background: #f4fef3;
+}
+
+#menu-interfejsy-i-podklyuchennye-ustrojstva {
+    background-color: #FFFFDD;
+    margin: 0px;
+    padding: 0px;
+}
+
+#menu-interfejsy-i-podklyuchennye-ustrojstva li
+{
+    list-style: none;
+}
+
+#menu-interfejsy-i-podklyuchennye-ustrojstva li a
+{
+    text-decoration: none;
+   	font-weight:700;
+    display: block;
+    padding: 5px 0 5px 8px;
+    color: #335577;
+    border-bottom: 1px dotted #FF55FF;
+}
+
+#menu-interfejsy-i-podklyuchennye-ustrojstva li a:hover
+{
+    background-color: #00FFFF;
+}
+
+#menu-interfejsy-i-podklyuchennye-ustrojstva li:hover ul
+{
+    display: block;
+    margin-left: 10px;
+}
+
+#menu-interfejsy-i-podklyuchennye-ustrojstva li ul
+{
+    background-color: #99FF99;
+    color: #777733;
+    list-style: none outside none;
+    margin: 0px;
+    padding: 10px;
+}
+</style>		<!-- Yandex Native Ads -->
+		<script>window.yaContextCb=window.yaContextCb||[]</script>
+		<script src="./narodstream.ru_files/context.js(1).Без названия" async=""></script>
+	<style id="fit-vids-style">.fluid-width-video-wrapper{width:100%;position:relative;padding:0;}.fluid-width-video-wrapper iframe,.fluid-width-video-wrapper object,.fluid-width-video-wrapper embed {position:absolute;top:0;left:0;width:100%;height:100%;}</style></head>
+
+<body data-rsssl="1" class="post-template-default single single-post postid-15671 single-format-standard custom-background default-layout">
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async="" src="./narodstream.ru_files/js"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-4JF3NKLYVE');
+</script>
+
+  	
+<div id="container" class="hfeed">
+
+	<div class="skip-container cf">
+		<a class="skip-link screen-reader-text focusable" href="https://narodstream.ru/stm-urok-124-lan8742a-lwip-netconn-tcp-server/#content">↓ Перейти к основному содержимому</a>
+	</div><!-- .skip-container -->
+	<div id="header_section">
+	<div id="header" role="banner">
+
+		
+		
+		
+		
+		<div id="content-outer">
+		<div id="logo">
+				<a href="https://narodstream.ru/"><img src="./narodstream.ru_files/cropped-circuit-board-2342048_1440_01.png" width="1440" height="150" alt="Программирование микроконтроллеров"></a>
+		</div><!-- end of #logo -->
+		</div>	
+
+		
+				
+				<div class="main-nav"><div id="responsive_current_menu_item">STM Урок 124. LAN8742A. LWIP. NETCONN. TCP Server</div><ul id="menu-glavnoe-menyu" class="menu"><li id="menu-item-8" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-8"><a href="https://narodstream.ru/">Главная</a></li>
+<li id="menu-item-10" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-10"><a href="https://narodstream.ru/novosti/">Новости</a></li>
+<li id="menu-item-22" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-22"><a href="https://narodstream.ru/stm-urok-124-lan8742a-lwip-netconn-tcp-server/#">Уроки по программированию</a>
+<ul class="sub-menu">
+	<li id="menu-item-18007" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-18007"><a href="https://narodstream.ru/programmirovanie_n_c/">Программирование на C</a></li>
+	<li id="menu-item-30" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-30"><a href="https://narodstream.ru/programmirovanie-mk-avr/">Программирование микроконтроллеров AVR</a></li>
+	<li id="menu-item-55" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-55"><a href="https://narodstream.ru/programmirovanie-mk-stm32/">Программирование микроконтроллеров  STM32</a></li>
+	<li id="menu-item-27" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-27"><a href="https://narodstream.ru/programmirovanie-mk-pic/">Программирование микроконтроллеров PIC</a></li>
+	<li id="menu-item-17793" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-17793"><a href="https://narodstream.ru/programmirovanie-mk-esp8266/">Программирование микроконтроллеров ESP8266</a></li>
+	<li id="menu-item-22701" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-22701"><a href="https://narodstream.ru/programmirovanie-mk-esp32/">Программирование микроконтроллеров ESP32</a></li>
+</ul>
+</li>
+<li id="menu-item-14033" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-14033"><a href="https://narodstream.ru/programmirovanie-ustrojstv-i-interfejsov/">Устройства и интерфейсы</a></li>
+<li id="menu-item-18092" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-18092"><a href="http://no/">Прочее</a>
+<ul class="sub-menu">
+	<li id="menu-item-11516" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-11516"><a href="https://narodstream.ru/testy-ustrojstv-aksessuarov/">Тесты устройств и аксессуаров</a></li>
+	<li id="menu-item-17435" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-17435"><a href="https://narodstream.ru/poleznie-statji-podpischikov/">Полезные статьи подписчиков</a></li>
+</ul>
+</li>
+<li id="menu-item-23" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-23"><a href="https://narodstream.ru/ssylki/">Ссылки</a></li>
+<li id="menu-item-7804" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-7804"><a href="https://narodstream.ru/forums/forum/programmirovanie-mikrokontrollerov/">Форум</a></li>
+<li id="menu-item-13295" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-13295"><a href="https://narodstream.ru/help/">Помощь</a></li>
+</ul><a id="responsive_menu_button"></a></div>
+		
+		
+	</div><!-- end of #header -->
+	</div>
+
+	  
+	<div id="wrapper" class="clearfix">
+		<div id="content-outer">
+<div class="left_sidebar">
+	<div class="l-sidebar"><h4 class="l-wtitle">Свежие комментарии</h4><ul id="recentcomments"><li class="recentcomments"><span class="comment-author-link"><a href="http://-/" rel="external nofollow" class="url">Leoikt</a></span> к записи <a href="https://narodstream.ru/c-urok-11-ternarnyj-operator/#comment-10373">C. Урок 11. Тернарный оператор</a></li><li class="recentcomments"><span class="comment-author-link">Виталий Трегубов</span> к записи <a href="https://narodstream.ru/stm-urok-23-hal-spi-sdvigovyj-registr-74hc595/#comment-10372">STM Урок 23. HAL. SPI. Сдвиговый регистр 74HC595</a></li><li class="recentcomments"><span class="comment-author-link">Nikita</span> к записи <a href="https://narodstream.ru/pic-urok-16-mssp-spi-svetodiodnyj-indikator-max7219-chast-2/#comment-10369">PIC. Урок 16. MSSP. SPI. Светодиодный индикатор MAX7219. Часть 2</a></li><li class="recentcomments"><span class="comment-author-link"><a href="https://narodstream.ru/" rel="external nofollow" class="url">Narod Stream</a></span> к записи <a href="https://narodstream.ru/avr-urok-12-lcd-indikator-16x2-chast-2/#comment-10366">AVR Урок 12. LCD индикатор 16×2. Часть 2</a></li><li class="recentcomments"><span class="comment-author-link">Виктор</span> к записи <a href="https://narodstream.ru/esp32-urok-2-nastraivaem-toolchain-i-pishem-svoyu-proshivku-v-ide-es/#comment-10361">ESP32 Урок 2. Настраиваем toolchain и пишем свою прошивку в Espressif IDE</a></li></ul></div><div class="l-sidebar"><h4 class="l-wtitle">Форум. Последние ответы</h4>
+		<ul class="bbp-replies-widget">
+
+			
+				<li>
+
+					<a href="https://narodstream.ru/forums/users/vlakar/" title="Посмотреть профиль пользователя Vlakar" class="bbp-author-link"><span class="bbp-author-avatar"><img alt="" src="./narodstream.ru_files/7a3f1562fa0c6ef3170d72ffda536abe.png" srcset="https://secure.gravatar.com/avatar/7a3f1562fa0c6ef3170d72ffda536abe?s=28&amp;d=mm&amp;r=g 2x" class="avatar avatar-14 photo" height="14" width="14"></span><span class="bbp-author-name">Vlakar</span></a> в <a class="bbp-reply-topic-title" href="https://narodstream.ru/forums/topic/programmirovanie-mk-avr/page/4/#post-22904" title="Для разработки устройства на Atmega 8 необходимо …">Программирование МК AVR</a> <time datetime="2022-04-07 03:10:12">4 дня, 11 часов назад</time>
+				</li>
+
+			
+				<li>
+
+					<a href="https://narodstream.ru/forums/users/oleg_/" title="Посмотреть профиль пользователя Oleg_" class="bbp-author-link"><span class="bbp-author-avatar"><img alt="" src="./narodstream.ru_files/8c894eb417ed355b1edb77c5263aa71b.png" srcset="https://secure.gravatar.com/avatar/8c894eb417ed355b1edb77c5263aa71b?s=28&amp;d=mm&amp;r=g 2x" class="avatar avatar-14 photo" height="14" width="14"></span><span class="bbp-author-name">Oleg_</span></a> в <a class="bbp-reply-topic-title" href="https://narodstream.ru/forums/topic/programmirovanie-mk-stm32/page/11/#post-22693" title="Добрый день! Помогите советом. Хочу писать кругов…">Программирование МК STM32</a> <time datetime="2022-02-04 12:50:20">2 месяца назад</time>
+				</li>
+
+			
+				<li>
+
+					<a href="https://narodstream.ru/forums/users/rifnur/" title="Посмотреть профиль пользователя Rifnur" class="bbp-author-link"><span class="bbp-author-avatar"><img alt="" src="./narodstream.ru_files/fff565ba8879a9c1f0abe677161eb293.png" srcset="https://secure.gravatar.com/avatar/fff565ba8879a9c1f0abe677161eb293?s=28&amp;d=mm&amp;r=g 2x" class="avatar avatar-14 photo" height="14" width="14"></span><span class="bbp-author-name">Rifnur</span></a> в <a class="bbp-reply-topic-title" href="https://narodstream.ru/forums/topic/programmirovanie-mk-stm32/page/11/#post-22692" title="megger, Спасибо за помощь.(Rifnur, урок 100 часть…">Программирование МК STM32</a> <time datetime="2022-01-28 03:36:09">2 месяца, 1 неделя назад</time>
+				</li>
+
+			
+				<li>
+
+					<a href="https://narodstream.ru/forums/users/megger380/" title="Посмотреть профиль пользователя megger380" class="bbp-author-link"><span class="bbp-author-avatar"><img alt="" src="./narodstream.ru_files/d76228eec04efa9ba20b9f253a57a11c.png" srcset="https://secure.gravatar.com/avatar/d76228eec04efa9ba20b9f253a57a11c?s=28&amp;d=mm&amp;r=g 2x" class="avatar avatar-14 photo" height="14" width="14"></span><span class="bbp-author-name">megger380</span></a> в <a class="bbp-reply-topic-title" href="https://narodstream.ru/forums/topic/programmirovanie-mk-avr/page/4/#post-22691" title="Andry_EXOSpace, просто возвращаем значение 10 бит…">Программирование МК AVR</a> <time datetime="2022-01-27 19:06:36">2 месяца, 1 неделя назад</time>
+				</li>
+
+			
+				<li>
+
+					<a href="https://narodstream.ru/forums/users/megger380/" title="Посмотреть профиль пользователя megger380" class="bbp-author-link"><span class="bbp-author-avatar"><img alt="" src="./narodstream.ru_files/d76228eec04efa9ba20b9f253a57a11c.png" srcset="https://secure.gravatar.com/avatar/d76228eec04efa9ba20b9f253a57a11c?s=28&amp;d=mm&amp;r=g 2x" class="avatar avatar-14 photo" height="14" width="14"></span><span class="bbp-author-name">megger380</span></a> в <a class="bbp-reply-topic-title" href="https://narodstream.ru/forums/topic/programmirovanie-mk-stm32/page/11/#post-22690" title="Rifnur, урок 100 часть 1, описано как включить fl…">Программирование МК STM32</a> <time datetime="2022-01-27 18:52:29">2 месяца, 1 неделя назад</time>
+				</li>
+
+			
+		</ul>
+
+		</div><div class="l-sidebar"><div id="calendar_wrap" class="calendar_wrap"><table id="wp-calendar">
+	<caption>Апрель 2022</caption>
+	<thead>
+	<tr>
+		<th scope="col" title="Понедельник">Пн</th>
+		<th scope="col" title="Вторник">Вт</th>
+		<th scope="col" title="Среда">Ср</th>
+		<th scope="col" title="Четверг">Чт</th>
+		<th scope="col" title="Пятница">Пт</th>
+		<th scope="col" title="Суббота">Сб</th>
+		<th scope="col" title="Воскресенье">Вс</th>
+	</tr>
+	</thead>
+
+	<tfoot>
+	<tr>
+		<td colspan="3" id="prev"><a href="https://narodstream.ru/2022/03/">« Мар</a></td>
+		<td class="pad">&nbsp;</td>
+		<td colspan="3" id="next" class="pad">&nbsp;</td>
+	</tr>
+	</tfoot>
+
+	<tbody>
+	<tr>
+		<td colspan="4" class="pad">&nbsp;</td><td><a href="https://narodstream.ru/2022/04/01/" aria-label="Записи, опубликованные 01.04.2022">1</a></td><td>2</td><td>3</td>
+	</tr>
+	<tr>
+		<td>4</td><td><a href="https://narodstream.ru/2022/04/05/" aria-label="Записи, опубликованные 05.04.2022">5</a></td><td>6</td><td>7</td><td><a href="https://narodstream.ru/2022/04/08/" aria-label="Записи, опубликованные 08.04.2022">8</a></td><td>9</td><td>10</td>
+	</tr>
+	<tr>
+		<td id="today">11</td><td>12</td><td>13</td><td>14</td><td>15</td><td>16</td><td>17</td>
+	</tr>
+	<tr>
+		<td>18</td><td>19</td><td>20</td><td>21</td><td>22</td><td>23</td><td>24</td>
+	</tr>
+	<tr>
+		<td>25</td><td>26</td><td>27</td><td>28</td><td>29</td><td>30</td>
+		<td class="pad" colspan="1">&nbsp;</td>
+	</tr>
+	</tbody>
+	</table></div></div><div class="l-sidebar"><h4 class="l-wtitle">Архивы</h4>		<ul>
+			<li><a href="https://narodstream.ru/2022/04/">Апрель 2022</a></li>
+	<li><a href="https://narodstream.ru/2022/03/">Март 2022</a></li>
+	<li><a href="https://narodstream.ru/2021/12/">Декабрь 2021</a></li>
+	<li><a href="https://narodstream.ru/2021/11/">Ноябрь 2021</a></li>
+	<li><a href="https://narodstream.ru/2021/09/">Сентябрь 2021</a></li>
+	<li><a href="https://narodstream.ru/2021/07/">Июль 2021</a></li>
+	<li><a href="https://narodstream.ru/2020/12/">Декабрь 2020</a></li>
+	<li><a href="https://narodstream.ru/2020/11/">Ноябрь 2020</a></li>
+	<li><a href="https://narodstream.ru/2020/10/">Октябрь 2020</a></li>
+	<li><a href="https://narodstream.ru/2020/09/">Сентябрь 2020</a></li>
+	<li><a href="https://narodstream.ru/2020/08/">Август 2020</a></li>
+	<li><a href="https://narodstream.ru/2020/07/">Июль 2020</a></li>
+	<li><a href="https://narodstream.ru/2020/06/">Июнь 2020</a></li>
+	<li><a href="https://narodstream.ru/2020/05/">Май 2020</a></li>
+	<li><a href="https://narodstream.ru/2020/04/">Апрель 2020</a></li>
+	<li><a href="https://narodstream.ru/2020/03/">Март 2020</a></li>
+	<li><a href="https://narodstream.ru/2019/12/">Декабрь 2019</a></li>
+	<li><a href="https://narodstream.ru/2019/11/">Ноябрь 2019</a></li>
+	<li><a href="https://narodstream.ru/2019/10/">Октябрь 2019</a></li>
+	<li><a href="https://narodstream.ru/2019/09/">Сентябрь 2019</a></li>
+	<li><a href="https://narodstream.ru/2019/08/">Август 2019</a></li>
+	<li><a href="https://narodstream.ru/2019/07/">Июль 2019</a></li>
+	<li><a href="https://narodstream.ru/2019/06/">Июнь 2019</a></li>
+	<li><a href="https://narodstream.ru/2019/05/">Май 2019</a></li>
+	<li><a href="https://narodstream.ru/2019/04/">Апрель 2019</a></li>
+	<li><a href="https://narodstream.ru/2019/03/">Март 2019</a></li>
+	<li><a href="https://narodstream.ru/2018/12/">Декабрь 2018</a></li>
+	<li><a href="https://narodstream.ru/2018/11/">Ноябрь 2018</a></li>
+	<li><a href="https://narodstream.ru/2018/10/">Октябрь 2018</a></li>
+	<li><a href="https://narodstream.ru/2018/09/">Сентябрь 2018</a></li>
+	<li><a href="https://narodstream.ru/2018/08/">Август 2018</a></li>
+	<li><a href="https://narodstream.ru/2018/07/">Июль 2018</a></li>
+	<li><a href="https://narodstream.ru/2018/06/">Июнь 2018</a></li>
+	<li><a href="https://narodstream.ru/2018/05/">Май 2018</a></li>
+	<li><a href="https://narodstream.ru/2018/04/">Апрель 2018</a></li>
+	<li><a href="https://narodstream.ru/2018/03/">Март 2018</a></li>
+	<li><a href="https://narodstream.ru/2018/02/">Февраль 2018</a></li>
+	<li><a href="https://narodstream.ru/2018/01/">Январь 2018</a></li>
+	<li><a href="https://narodstream.ru/2017/12/">Декабрь 2017</a></li>
+	<li><a href="https://narodstream.ru/2017/11/">Ноябрь 2017</a></li>
+	<li><a href="https://narodstream.ru/2017/10/">Октябрь 2017</a></li>
+	<li><a href="https://narodstream.ru/2017/09/">Сентябрь 2017</a></li>
+	<li><a href="https://narodstream.ru/2017/08/">Август 2017</a></li>
+	<li><a href="https://narodstream.ru/2017/07/">Июль 2017</a></li>
+	<li><a href="https://narodstream.ru/2017/06/">Июнь 2017</a></li>
+	<li><a href="https://narodstream.ru/2017/05/">Май 2017</a></li>
+	<li><a href="https://narodstream.ru/2017/03/">Март 2017</a></li>
+	<li><a href="https://narodstream.ru/2017/02/">Февраль 2017</a></li>
+	<li><a href="https://narodstream.ru/2017/01/">Январь 2017</a></li>
+	<li><a href="https://narodstream.ru/2016/12/">Декабрь 2016</a></li>
+	<li><a href="https://narodstream.ru/2016/11/">Ноябрь 2016</a></li>
+		</ul>
+		</div></div>
+
+<div id="content" class="grid col-620" role="main">
+
+	<div class="breadcrumb-list" xmlns:v="http://rdf.data-vocabulary.org/#"><span class="breadcrumb" typeof="v:Breadcrumb"><a rel="v:url" property="v:title" href="https://narodstream.ru/">Главная</a></span> <span class="chevron">›</span> <span class="breadcrumb" typeof="v:Breadcrumb"><a rel="v:url" property="v:title" href="https://narodstream.ru/lan/">LAN</a></span> <span class="chevron">›</span> <span class="breadcrumb-current">STM Урок 124. LAN8742A. LWIP. NETCONN. TCP Server</span></div>
+	
+								<div id="post-15671" class="post-15671 post type-post status-publish format-standard has-post-thumbnail hentry category-lan category-rub_stm32">
+								
+	<h1 class="entry-title post-title responsive">STM Урок 124. LAN8742A. LWIP. NETCONN. TCP Server</h1>
+
+<div class="post-meta">
+	<i class="fa fa-calendar" aria-hidden="true"></i><span class="meta-prep meta-prep-author posted">Posted on </span><a href="https://narodstream.ru/stm-urok-124-lan8742a-lwip-netconn-tcp-server/" title="STM Урок 124. LAN8742A. LWIP. NETCONN. TCP Server" rel="bookmark"><time class="timestamp updated" datetime="2018-07-10T12:11:27+00:00">Июль 10, 2018</time></a><span class="byline"> by </span><span class="author vcard"><a class="url fn n" href="https://narodstream.ru/author/admin/" title="Посмотреть все записи автора Narod Stream"><span class="author-gravtar"><img alt="" src="./narodstream.ru_files/4824b24065500834db4b9f331b608833.jpeg" srcset="https://secure.gravatar.com/avatar/4824b24065500834db4b9f331b608833?s=64&amp;d=mm&amp;r=g 2x" class="avatar avatar-32 photo" height="32" width="32"></span>Narod Stream</a></span>		<span class="posted-in">
+Опубликовано в <a href="https://narodstream.ru/lan/">LAN</a>, <a href="https://narodstream.ru/rub_stm32/">Программирование STM32</a>		</span>
+
+			<span class="comments-link">
+		<span class="mdash">—</span>
+			<a href="https://narodstream.ru/stm-urok-124-lan8742a-lwip-netconn-tcp-server/#comments">8 комментариев ↓</a>		</span>
+	</div><!-- end of .post-meta -->
+				<div class="post-entry">
+					
+					<!-- Yandex.RTB R-A-232869-3 -->
+			<div id="yandex_rtb_R-A-232869-3"></div>
+			<script type="text/javascript">
+				(function(w, d, n, s, t) {
+					w[n] = w[n] || [];
+					w[n].push(function() {
+						Ya.Context.AdvManager.render({
+							blockId: "R-A-232869-3",
+							renderTo: "yandex_rtb_R-A-232869-3",
+							horizontalAlign: false,
+							async: true
+						});
+					});
+					t = d.getElementsByTagName("script")[0];
+					s = d.createElement("script");
+					s.type = "text/javascript";
+					s.src = "//an.yandex.ru/system/context.js";
+					s.async = true;
+					t.parentNode.insertBefore(s, t);
+				})(this, this.document, "yandexContextAsyncCallbacks");
+			</script><p>&nbsp;</p>
+			<!-- Yandex.RTB R-A-232869-4 -->
+			<div id="yandex_rtb_R-A-232869-4"></div>
+			<script type="text/javascript">
+				(function(w, d, n, s, t) {
+					w[n] = w[n] || [];
+					w[n].push(function() {
+						Ya.Context.AdvManager.render({
+							blockId: "R-A-232869-4",
+							renderTo: "yandex_rtb_R-A-232869-4",
+							horizontalAlign: false,
+							async: true
+						});
+					});
+					t = d.getElementsByTagName("script")[0];
+					s = d.createElement("script");
+					s.type = "text/javascript";
+					s.src = "//an.yandex.ru/system/context.js";
+					s.async = true;
+					t.parentNode.insertBefore(s, t);
+				})(this, this.document, "yandexContextAsyncCallbacks");
+			</script><p>&nbsp;</p><p>&nbsp;</p>
+										<p class="MyNormal" style="text-align: justify;">Переходим к следующему, более серьёзному&nbsp;типу соединения транспортного уровня — <strong>TCP</strong> (<strong>Transmission Control Protocol</strong>,&nbsp;протокол управления передачей). С данным протоколом мы уже встречались неоднократно. Поэтому, хоть он и является непростым, мы его изучили очень неплохо. Мы знаем, как именно происходит создание и разрыв соединения, знаем, как передаются пакеты TCP, как они делятся на сегменты. Поэтому работать нам с ним и анализировать определённые создающиеся нестандартные ситуации мы уже вполне можем. Изучая стек протоколов LWIP, мы также сталкивались с протоколом TCP, даже соединяли с помощью него два контроллера, организовывали между ними передачу данных. Но всё это происходило с использованием интерфейса RAW. Теперь настала пора поработать с данным протоколом при помощи интерфейса NETCOON, который, как известно, работает с использованием системы реального времени FREERTOS.</p>
+<p class="MyNormal" style="text-align: justify;">В качестве платы для испытания мы возьмём <strong>STM32F746-Discovery</strong>, а проект для прототипа мы возьмём из <a href="https://narodstream.ru/stm-urok-120-lan8742f-lwip-netconn-udp-server/"><strong>урока 120</strong></a> с именем <strong>LAN8742_UDP_SERVER_NETCONN</strong>. Присвоим ему теперь соответствующее имя <strong>LAN8742_TCP_SERVER_NETCONN</strong> и откроем его в Cube MX.</p>
+<p class="MyNormal" style="text-align: justify;">Немного подправим настройки&nbsp;<strong>LWIP</strong>&nbsp;в разделе&nbsp;<strong>Key Options</strong>, чтобы они соответствовали настройкам клиентов в будущих уроках</p>
+<p class="MyNormal" style="text-align: justify;">&nbsp;</p>
+<p class="MyNormal" style="text-align: center;"><img class="alignnone size-full wp-image-1375" src="./narodstream.ru_files/stm124img00.png" alt="" width="331" height="253"></p>
+<p class="MyNormal" style="text-align: center;">&nbsp;</p>
+<p class="MyNormal" style="text-align: center;"><img class="alignnone size-full wp-image-1376" src="./narodstream.ru_files/stm124img01.png" alt="" width="392" height="400"></p>
+<p class="MyNormal" style="text-align: justify;">&nbsp;</p>
+<p class="MyNormal" style="text-align: justify;">Сгенерируем проект для <strong>System Workbench</strong> и откроем его там. Установим уровень оптимизации в <strong>1</strong>, уберём при наличии отладочные настройки и закомментируем неизвестные компилятору строки в файле <strong>main.c</strong>.</p>
+<p class="MyNormal" style="text-align: justify;">Попробуем собрать проект и начнём работать с файлом <strong>main.c</strong>.</p>
+<p class="MyNormal" style="text-align: justify;">Первым делом исправим шапку в <strong>main()</strong></p>
+<p class="MyNormal" style="text-align: justify;">&nbsp;</p>
+<p><code>TFT_DisplayString(<span style="color: #800000;">0</span>, <span style="color: #800000;">10</span>, (<span style="color: #005032;">uint8_t</span> *)<span style="color: #2a00ff;">"<strong>TCP Server</strong>"</span>, <i><span style="color: #0000c0;">CENTER_MODE</span></i>);</code></p>
+<p class="MyNormal" style="text-align: justify;">&nbsp;</p>
+<p class="MyNormal" style="text-align: justify;">Наш проект будет поддерживать два соединения (или, как принято называть, сокета). Отличие протокола TCP от UDP помимо всего прочего состоит в том, что мы можем работать с двумя соединениями на одном порте сервера. Поэтому в структуре для сокета мы уберём свойство порта, но добавим свойство соединения TCP</p>
+<p class="MyNormal" style="text-align: justify;">&nbsp;</p>
+<p align="LEFT"><code><span style="color: #7f0055;">typedef</span> <span style="color: #7f0055;">struct</span> <span style="color: #005032;">struct_sock_t</span> {</code></p>
+<p align="LEFT"><code><span style="color: #005032;">&nbsp; uint16_t</span> <span style="color: #0000c0;">y_pos</span>;</code></p>
+<p align="LEFT"><code><span style="color: #005032;">&nbsp; <s>uint16_t</s></span><s> <span style="color: #0000c0;">port</span>;</s></code></p>
+<p align="LEFT"><code><span style="color: #7f0055;">&nbsp; <strong>struct</strong></span><strong> <span style="color: #005032;">netconn</span> *<span style="color: #0000c0;">conn</span>;</strong></code></p>
+<p><code>} <span style="color: #005032;">struct_sock</span>;</code></p>
+<p class="MyNormal" style="text-align: justify;">&nbsp;</p>
+<p class="MyNormal" style="text-align: justify;">Исправим имя функции&nbsp;задачи соединения, удалив из неё почти весь код, за исключением лишь нескольких объявлений</p>
+<p class="MyNormal" style="text-align: justify;">&nbsp;</p>
+<p align="LEFT"><code><span style="color: #7f0055;">static</span> <span style="color: #7f0055;">void</span> <strong>tcp</strong>_thread(<span style="color: #7f0055;">void</span> *arg)</code></p>
+<p align="LEFT"><code>{</code></p>
+<p align="LEFT"><code><span style="color: #005032;">&nbsp; struct_out</span> *qstruct;</code></p>
+<p align="LEFT"><code><span style="color: #005032;">&nbsp; err_t</span> err, recv_err;</code></p>
+<p align="LEFT"><code><span style="color: #7f0055;">&nbsp; struct</span> <span style="color: #005032;">netconn</span> *conn;</code></p>
+<p><code>}</code></p>
+<p class="MyNormal" style="text-align: justify;">&nbsp;</p>
+<p class="MyNormal" style="text-align: justify;">Теперь переходим в задачу по умолчанию <strong>StartDefaultTask</strong> и также удалим из неё почти весь пользовательский код, оставив лишь инициализацию структур в плане вертикальной координаты вывода информации на экран дисплея</p>
+<p class="MyNormal" style="text-align: justify;">&nbsp;</p>
+<p align="LEFT"><code><span style="color: #3f7f5f;">/* USER CODE BEGIN 5 */</span></code></p>
+<p align="LEFT"><strong><code>sock01.<span style="color: #0000c0;">y_pos</span> = <span style="color: #800000;">60</span>;</code></strong></p>
+<p align="LEFT"><strong><code>sock02.<span style="color: #0000c0;">y_pos</span> = <span style="color: #800000;">180</span>;</code></strong></p>
+<p><code><span style="color: #3f7f5f;">/* Infinite loop */</span></code></p>
+<p class="MyNormal" style="text-align: justify;">&nbsp;</p>
+<p class="MyNormal" style="text-align: justify;">Объявим здесь же указатель на переменную структуры соединения и переменную для ошибки</p>
+<p class="MyNormal" style="text-align: justify;">&nbsp;</p>
+<p align="LEFT"><code><span style="color: #3f7f5f;">/* USER CODE BEGIN 5 */</span></code></p>
+<p align="LEFT"><strong><code><span style="color: #7f0055;">struct</span> <span style="color: #005032;">netconn</span> *conn;</code></strong></p>
+<p align="LEFT"><strong><code><span style="color: #005032;">err_t</span> err;</code></strong></p>
+<p class="MyNormal" style="text-align: justify;">&nbsp;</p>
+<p class="MyNormal" style="text-align: justify;">Создадим соединение</p>
+<p class="MyNormal" style="text-align: justify;">&nbsp;</p>
+<p align="LEFT"><code>sock02.<span style="color: #0000c0;">y_pos</span> = <span style="color: #800000;">180</span>;</code></p>
+<p><strong><code>conn = netconn_new(<i><span style="color: #0000c0;">NETCONN_TCP</span></i>);</code></strong></p>
+<p class="MyNormal" style="text-align: justify;">&nbsp;</p>
+<p class="MyNormal" style="text-align: justify;">Если всё нормально создалось, то передадим указатель на данную структуру обоим соединениям</p>
+<p class="MyNormal" style="text-align: justify;">&nbsp;</p>
+<p align="LEFT"><code>conn = netconn_new(<i><span style="color: #0000c0;">NETCONN_TCP</span></i>);</code></p>
+<p align="LEFT"><strong><code><span style="color: #7f0055;">if</span>(conn!=NULL)</code></strong></p>
+<p align="LEFT"><strong><code>{</code></strong></p>
+<p align="LEFT"><strong><code>&nbsp; sock01.<span style="color: #0000c0;">conn</span> = conn;</code></strong></p>
+<p align="LEFT"><strong><code>&nbsp; sock02.<span style="color: #0000c0;">conn</span> = conn;</code></strong></p>
+<p><strong><code>}</code></strong></p>
+<p class="MyNormal" style="text-align: justify;">&nbsp;</p>
+<p class="MyNormal" style="text-align: justify;">Свяжем структуру, например с портом 80, что пригодится нам на будущее для создания сервера HTTP</p>
+<p class="MyNormal" style="text-align: justify;">&nbsp;</p>
+<p align="LEFT"><code>sock02.<span style="color: #0000c0;">conn</span> = conn;</code></p>
+<p><strong><code>err = netconn_bind(conn, NULL, <span style="color: #800000;">80</span>);</code></strong></p>
+<p class="MyNormal" style="text-align: justify;">&nbsp;</p>
+<p class="MyNormal" style="text-align: justify;">Если ошибок нет, то начинаем слушать порт, а если нет — удаляем структуру</p>
+<p class="MyNormal" style="text-align: justify;">&nbsp;</p>
+<p align="LEFT"><code>err = netconn_bind(conn, NULL, <span style="color: #800000;">80</span>);</code></p>
+<p align="LEFT"><strong><code><span style="color: #7f0055;">if</span> (err == <i><span style="color: #0000c0;">ERR_OK</span></i>)</code></strong></p>
+<p align="LEFT"><strong><code>{</code></strong></p>
+<p align="LEFT"><strong><code>&nbsp; netconn_listen(conn);</code></strong></p>
+<p align="LEFT"><strong><code>}</code></strong></p>
+<p align="LEFT"><strong><code><span style="color: #7f0055;">else</span></code></strong></p>
+<p align="LEFT"><strong><code>{</code></strong></p>
+<p align="LEFT"><strong><code>&nbsp; netconn_delete(conn);</code></strong></p>
+<p><strong><code>}</code></strong></p>
+<p class="MyNormal" style="text-align: justify;">&nbsp;</p>
+<p class="MyNormal" style="text-align: justify;">Запустим анализатор трафика Wireshark и отфильтруем там поток по IP-адресу нашего сервера</p>
+<p class="MyNormal" style="text-align: justify;">&nbsp;</p>
+<p class="MyNormal" style="text-align: center;"><img class="alignnone size-full wp-image-1380" src="./narodstream.ru_files/stm124img02.png" alt="" width="300" height="131"></p>
+<p class="MyNormal" style="text-align: justify;">&nbsp;</p>
+<p class="MyNormal" style="text-align: justify;">Теперь мы можем проверить создание соединения.</p>
+<p class="MyNormal" style="text-align: justify;">Соберём код, прошьём контроллер и запустим программу сетевого обмена Putty, в которой выберем созданное ранее нами соединение. Если у кого нет, то создаём подобное, на скриншоте всё есть. Запустим соединение с помощью кнопки <strong>Open</strong></p>
+<p class="MyNormal" style="text-align: justify;">&nbsp;</p>
+<p class="MyNormal" style="text-align: center;"><img class="alignnone size-full wp-image-1382" src="./narodstream.ru_files/stm124img03.png" alt="" width="450" height="443"></p>
+<p class="MyNormal" style="text-align: justify;">&nbsp;</p>
+<p class="MyNormal" style="text-align: justify;">Мы видим, что соединение у нас успешно установилось, трёхкратное рукопожатие произошло (нажмите на картинку для увеличения изображения)</p>
+<p class="MyNormal" style="text-align: justify;">&nbsp;</p>
+<p class="MyNormal" style="text-align: center;"><a title="" href="https://narodstream.ru/wp-content/uploads/2018/06/stm124img04.png" class="highslide-image" onclick="return hs.expand(this);" target="" rel="lightbox"><img class="alignnone size-full wp-image-1385" title="" src="./narodstream.ru_files/stm124img04_0500.png" alt="" width="500" height="30"></a></p>
+<p class="MyNormal" style="text-align: justify;">&nbsp;</p>
+<p class="MyNormal" style="text-align: justify;">Закроем окно соединения в Putty, соединение разорвалось, но только в одностороннем порядке. Сервер не изъявил желание на разрыв, а мы помним, что всё здесь должно быть обоюдно&nbsp;(нажмите на картинку для увеличения изображения)</p>
+<p class="MyNormal" style="text-align: justify;">&nbsp;</p>
+<p class="MyNormal" style="text-align: center;"><a title="" href="https://narodstream.ru/wp-content/uploads/2018/06/stm124img05.png" class="highslide-image" onclick="return hs.expand(this);" target="" rel="lightbox"><img class="alignnone size-full wp-image-1388" title="" src="./narodstream.ru_files/stm124img05_0500.png" alt="" width="500" height="56"></a></p>
+<p class="MyNormal" style="text-align: justify;">&nbsp;</p>
+<p class="MyNormal" style="text-align: justify;">Желание сервера на разрыв соединения мы инициируем позже.</p>
+<p class="MyNormal" style="text-align: justify;">Также в нашем соединении мы пока не можем передавать пакеты, мы это ещё не настроили, всё это будет происходить в задачах соединений, которые мы сейчас и создадим</p>
+<p class="MyNormal" style="text-align: justify;">&nbsp;</p>
+<p align="LEFT"><code>netconn_listen(conn);</code></p>
+<p align="LEFT"><strong><code>sys_thread_new(<span style="color: #2a00ff;">"tcp_thread1"</span>, tcp_thread, (<span style="color: #7f0055;">void</span>*)&amp;sock01, DEFAULT_THREAD_STACKSIZE, <i><span style="color: #0000c0;">osPriorityNormal</span></i> );</code></strong></p>
+<p><strong><code>sys_thread_new(<span style="color: #2a00ff;">"tcp_thread2"</span>, tcp_thread, (<span style="color: #7f0055;">void</span>*)&amp;sock02, DEFAULT_THREAD_STACKSIZE, <i><span style="color: #0000c0;">osPriorityNormal</span></i> );</code></strong></p>
+<p class="MyNormal" style="text-align: justify;">&nbsp;</p>
+<p class="MyNormal" style="text-align: justify;">Также здесь мы передали указатель на структуру соединения.</p>
+<p class="MyNormal" style="text-align: justify;">Перейдём теперь функцию для данных задач <strong>tcp_thread</strong> и создадим там структуру для приёмного буфера и&nbsp;ещё одну структуру соединения, предназначенную чисто для обмена данными. Такая структура будет у каждого соединения из двух</p>
+<p class="MyNormal" style="text-align: justify;">&nbsp;</p>
+<p align="LEFT"><code><span style="color: #7f0055;">struct</span> <span style="color: #005032;">netconn</span> *conn;</code></p>
+<p align="LEFT"><strong><code><span style="color: #7f0055;">struct</span> <span style="color: #005032;">netbuf</span> *inbuf;</code></strong></p>
+<p><strong><code><span style="color: #7f0055;">struct</span> <span style="color: #005032;">netconn</span> *newconn;</code></strong></p>
+<p class="MyNormal" style="text-align: justify;">&nbsp;</p>
+<p class="MyNormal" style="text-align: justify;">Поймаем переданный с помощью параметра задаче указатель на структуру соединения и передадим его локальному указателю</p>
+<p class="MyNormal" style="text-align: justify;">&nbsp;</p>
+<p align="LEFT"><code><span style="color: #7f0055;">struct</span> <span style="color: #005032;">netconn</span> *newconn;</code></p>
+<p align="LEFT"><strong><code><span style="color: #005032;">struct_sock</span> *arg_sock;</code></strong></p>
+<p align="LEFT"><strong><code>arg_sock = (<span style="color: #005032;">struct_sock</span>*) arg;</code></strong></p>
+<p><strong><code>conn = arg_sock-&gt;<span style="color: #0000c0;">conn</span>;</code></strong></p>
+<p class="MyNormal" style="text-align: justify;">&nbsp;</p>
+<p class="MyNormal" style="text-align: justify;">Создадим переменную для хранения длины буфера, а также указатель на обычный строковый буфер</p>
+<p class="MyNormal" style="text-align: justify;">&nbsp;</p>
+<p align="LEFT"><code>conn = arg_sock-&gt;<span style="color: #0000c0;">conn</span>;</code></p>
+<p align="LEFT"><strong><code><span style="color: #005032;">u16_t</span> buflen;</code></strong></p>
+<p><strong><code><span style="color: #7f0055;">char</span>* buf;</code></strong></p>
+<p class="MyNormal" style="text-align: justify;">&nbsp;</p>
+<!-- Yandex Native Ads C-A-232869-10 -->
+<div id="id-C-A-232869-10"></div>
+<script>window.yaContextCb.push(()=>{
+  Ya.Context.AdvManager.renderWidget({
+    renderTo: 'id-C-A-232869-10',
+    blockId: 'C-A-232869-10'
+  })
+})</script><p></p><!-- Yandex.RTB R-A-232869-11 -->
+<div id="yandex_rtb_R-A-232869-11"></div>
+<script>window.yaContextCb.push(()=>{
+  Ya.Context.AdvManager.render({
+    renderTo: 'yandex_rtb_R-A-232869-11',
+    blockId: 'R-A-232869-11'
+  })
+})</script>
+<p>&nbsp;</p>
+<p class="MyNormal" style="text-align: justify;">Изменим цвет вывода информации на дисплей</p>
+<p class="MyNormal" style="text-align: justify;">&nbsp;</p>
+<p align="LEFT"><code><span style="color: #7f0055;">char</span>* buf;</code></p>
+<p><strong><code>TFT_SetTextColor(LCD_COLOR_BLUE);</code></strong></p>
+<p class="MyNormal" style="text-align: justify;">&nbsp;</p>
+<p class="MyNormal" style="text-align: justify;">Организуем бесконечный цикл, в котором свяжем структуру сокета для передачи данных с общей структурой TCP</p>
+<p class="MyNormal" style="text-align: justify;">&nbsp;</p>
+<p align="LEFT"><code>TFT_SetTextColor(LCD_COLOR_BLUE);</code></p>
+<p align="LEFT"><strong><code><span style="color: #7f0055;">for</span>(;;)</code></strong></p>
+<p align="LEFT"><strong><code>{</code></strong></p>
+<p align="LEFT"><strong><code>&nbsp; err = netconn_accept(conn, &amp;newconn);</code></strong></p>
+<p><strong><code>}</code></strong></p>
+<p>&nbsp;</p>
+<p style="text-align: justify;">Затем в этом цикле проверим успешность нашей операции. В случае успеха мы попадаем ещё в один бесконечный цикл, в котором попытаемся принять пакет и записать его в буфер,&nbsp;а в случае неудачи перейдём в другой бесконечный цикл с задержкой, чтобы не дать из-за этого подвиснуть остальным процессам нашей программы</p>
+<p style="text-align: justify;">&nbsp;</p>
+<p align="LEFT"><code>err = netconn_accept(conn, &amp;newconn);</code></p>
+<p align="LEFT"><strong><code><span style="color: #7f0055;">if</span> (err == <i><span style="color: #0000c0;">ERR_OK</span></i>)</code></strong></p>
+<p align="LEFT"><strong><code>{</code></strong></p>
+<p align="LEFT"><strong><code><span style="color: #7f0055;">&nbsp; for</span>(;;)</code></strong></p>
+<p align="LEFT"><strong><code>&nbsp; {</code></strong></p>
+<p align="LEFT"><strong><code>&nbsp;&nbsp;&nbsp; recv_err = netconn_recv(newconn, &amp;inbuf);</code></strong></p>
+<p align="LEFT"><strong><code>&nbsp; }</code></strong></p>
+<p align="LEFT"><strong><code>}</code></strong></p>
+<p align="LEFT"><strong><code><span style="color: #7f0055;">else</span></code></strong></p>
+<p align="LEFT"><strong><code>{</code></strong></p>
+<p align="LEFT"><strong><code>&nbsp; osDelay(<span style="color: #800000;">1</span>);</code></strong></p>
+<p align="LEFT"><strong><code>}</code></strong></p>
+<p style="text-align: justify;">&nbsp;</p>
+<p style="text-align: justify;">Причём, когда мы ждём пакета, мы не крутимся в данном бесконечном цикле, мы «висим» в ожидании пакета и провалимся в низ только в случае его получения. Мы, конечно, не висим, в это время выполняется какой-то определённый процесс библиотеки, который даёт работать другим процессам, так как, когда мы ждём пакета, другие соединения у нас в это время должны тоже свободно передавать и принимать данные.</p>
+<p style="text-align: justify;">Теперь, когда мы приняли пакет и провалились вниз, мы проверим успешность приёма пакета и в случае успеха заберём данные из пакета в наш строчный буфер с помощью специальной функции, а в случае неудачи мы освободим память структуры приёмного буфера и разорвём соединение с клиентом, а также выйдем из цикла.</p>
+<p style="text-align: justify;">&nbsp;</p>
+<p align="LEFT"><code>recv_err = netconn_recv(newconn, &amp;inbuf);</code></p>
+<p align="LEFT"><strong><code><span style="color: #7f0055;">if</span> (recv_err == <i><span style="color: #0000c0;">ERR_OK</span></i>)</code></strong></p>
+<p align="LEFT"><strong><code>{</code></strong></p>
+<p align="LEFT"><strong><code>&nbsp; netbuf_data(inbuf, (<span style="color: #7f0055;">void</span>**)&amp;buf, &amp;buflen);</code></strong></p>
+<p align="LEFT"><strong><code>}</code></strong></p>
+<p align="LEFT"><strong><code><span style="color: #7f0055;">else</span></code></strong></p>
+<p align="LEFT"><strong><code>{</code></strong></p>
+<p align="LEFT"><strong><code>&nbsp; netbuf_delete(inbuf);</code></strong></p>
+<p align="LEFT"><strong><code>&nbsp; netconn_close(newconn);</code></strong></p>
+<p align="LEFT"><strong><code><span style="color: #7f0055;">&nbsp; break</span>;</code></strong></p>
+<p><strong><code>}</code></strong></p>
+<p style="text-align: justify;">&nbsp;</p>
+<p style="text-align: justify;">Вот теперь у нас разъединение с клиентом должно будет происходить обоюдно.</p>
+<p style="text-align: justify;">Проверим это, собрав код, прошив контроллер и запустив соединение с помощью программы Putty, а затем разорвав его с помощью закрытия окна соединения данной программы.</p>
+<p style="text-align: justify;">Мы должны теперь получить вот такой результат&nbsp;(нажмите на картинку для увеличения изображения)</p>
+<p style="text-align: justify;">&nbsp;</p>
+<p style="text-align: center;"><a title="" href="https://narodstream.ru/wp-content/uploads/2018/06/stm124img06.png" class="highslide-image" onclick="return hs.expand(this);" target="" rel="lightbox"><img class="alignnone size-full wp-image-1394" title="" src="./narodstream.ru_files/stm124img06_0500.png" alt="" width="500" height="73"></a></p>
+<p style="text-align: justify;">&nbsp;</p>
+<p>Проверим концовку буфера на перевод строки и возврат каретки. Если таковой имеется, то освободим память структуры буфера и пропустим одну итерацию в цикле с помощью оператора <strong>continue</strong></p>
+<p class="MyNormal" style="text-align: justify;">&nbsp;</p>
+<p align="LEFT"><code>netbuf_data(inbuf, (<span style="color: #7f0055;">void</span>**)&amp;buf, &amp;buflen);</code></p>
+<p align="LEFT"><strong><code><span style="color: #7f0055;">if</span>((buf[<span style="color: #800000;">0</span>]==<span style="color: #800000;">0x0D</span>)||(buf[<span style="color: #800000;">0</span>]==<span style="color: #800000;">0x0A</span>))</code></strong></p>
+<p align="LEFT"><strong><code>{</code></strong></p>
+<p align="LEFT"><strong><code>&nbsp; netbuf_delete(inbuf);</code></strong></p>
+<p align="LEFT"><strong><code><span style="color: #7f0055;">&nbsp; continue</span>;</code></strong></p>
+<p><strong><code>}</code></strong></p>
+<p class="MyNormal" style="text-align: justify;">&nbsp;</p>
+<p class="MyNormal" style="text-align: justify;">А если это ещё не окончание строки, то продолжаем наш цикл.</p>
+<p class="MyNormal" style="text-align: justify;">Мы отправим содержимое буфера на дисплей с помощью очереди, обнулив определённый байт в строчном буфере, чтобы создать окончание строки</p>
+<p class="MyNormal" style="text-align: justify;">&nbsp;</p>
+<p align="LEFT"><code><span style="color: #7f0055;">&nbsp; continue</span>;</code></p>
+<p align="LEFT"><code>}</code></p>
+<p align="LEFT"><strong><code>qstruct = osMailAlloc(strout_Queue, osWaitForever);</code></strong></p>
+<p align="LEFT"><strong><code>qstruct-&gt;<span style="color: #0000c0;">y_pos</span> = arg_sock-&gt;<span style="color: #0000c0;">y_pos</span>;</code></strong></p>
+<p align="LEFT"><strong><code><span style="color: #642880;">strncpy</span>(str_buf,buf,buflen);</code></strong></p>
+<p align="LEFT"><strong><code>str_buf[buflen]=<span style="color: #800000;">0</span>;</code></strong></p>
+<p align="LEFT"><strong><code><span style="color: #642880;">sprintf</span>(qstruct-&gt;<span style="color: #0000c0;">str</span>,<span style="color: #2a00ff;">"%-20s"</span>, str_buf);</code></strong></p>
+<p align="LEFT"><strong><code>osMailPut(strout_Queue, qstruct);</code></strong></p>
+<p><strong><code>osMailFree(strout_Queue, qstruct);</code></strong></p>
+<p class="MyNormal" style="text-align: justify;">&nbsp;</p>
+<p class="MyNormal" style="text-align: justify;">Теперь мы в нашем строчном буфере занесём коды перевода строки и возврата каретки и отправим данный буфер назад клиенту, освободим затем память структуры буфера</p>
+<p class="MyNormal" style="text-align: justify;">&nbsp;</p>
+<p align="LEFT"><code>osMailFree(strout_Queue, qstruct);</code></p>
+<p align="LEFT"><strong><code>str_buf[buflen] = <span style="color: #2a00ff;">'\r'</span>;</code></strong></p>
+<p align="LEFT"><strong><code>str_buf[buflen<span style="color: #800000;">+1</span>] = <span style="color: #2a00ff;">'\n'</span>;</code></strong></p>
+<p align="LEFT"><strong><code>netconn_write(newconn, str_buf, buflen<span style="color: #800000;">+2</span>, NETCONN_COPY);</code></strong></p>
+<p><strong><code>netbuf_delete(inbuf);</code></strong></p>
+<p class="MyNormal" style="text-align: justify;">&nbsp;</p>
+<p class="MyNormal" style="text-align: justify;">Собственно, вот весь и код.</p>
+<p class="MyNormal" style="text-align: justify;">Соберём его, прошьём контроллер, запустим программу Putty, откроем порт и попробуем что-нибудь передать нашему серверу</p>
+<p class="MyNormal" style="text-align: justify;">&nbsp;</p>
+<p class="MyNormal" style="text-align: center;"><img class="alignnone size-full wp-image-1397" src="./narodstream.ru_files/stm124img07.png" alt="" width="200" height="114"></p>
+<p class="MyNormal" style="text-align: justify;">&nbsp;</p>
+<p class="MyNormal" style="text-align: justify;">Мы видим, что строка от сервера нам успешно вернулась.</p>
+<p class="MyNormal" style="text-align: justify;">Также мы видим, что строка пришла и на дисплей</p>
+<p class="MyNormal" style="text-align: justify;">&nbsp;</p>
+<p class="MyNormal" style="text-align: center;"><img class="alignnone size-full wp-image-1405" src="./narodstream.ru_files/stm124img13.jpg" alt="" width="250" height="152"></p>
+<p class="MyNormal" style="text-align: justify;">&nbsp;</p>
+<p class="MyNormal" style="text-align: justify;">Попробуем передать ещё несколько строк</p>
+<p class="MyNormal" style="text-align: justify;">&nbsp;</p>
+<p class="MyNormal" style="text-align: center;"><img class="alignnone size-full wp-image-1398" src="./narodstream.ru_files/stm124img08.png" alt="" width="166" height="217"></p>
+<p class="MyNormal" style="text-align: justify;">&nbsp;</p>
+<p class="MyNormal" style="text-align: justify;">Создадим ещё одно соединение с клиента, запустив ещё одну сессию Putty, и проверим прохождение строк также и оттуда</p>
+<p class="MyNormal" style="text-align: justify;">&nbsp;</p>
+<p class="MyNormal" style="text-align: center;"><img class="alignnone size-full wp-image-1399" src="./narodstream.ru_files/stm124img09.png" alt="" width="418" height="205"></p>
+<p class="MyNormal" style="text-align: justify;">&nbsp;</p>
+<p class="MyNormal" style="text-align: justify;">Данные также успешно передались и вернулись.</p>
+<p class="MyNormal" style="text-align: justify;">Также они пришли в виде строки на дисплей в другую, более нижнюю позицию</p>
+<p class="MyNormal" style="text-align: justify;">&nbsp;</p>
+<p class="MyNormal" style="text-align: center;"><img class="alignnone size-full wp-image-1406" src="./narodstream.ru_files/stm124img14.jpg" alt="" width="250" height="148"></p>
+<p class="MyNormal" style="text-align: justify;">&nbsp;</p>
+<p class="MyNormal" style="text-align: justify;">Попробуем и здесь передать ещё несколько строк</p>
+<p class="MyNormal" style="text-align: justify;">&nbsp;</p>
+<p class="MyNormal" style="text-align: center;"><img class="alignnone size-full wp-image-1400" src="./narodstream.ru_files/stm124img10.png" alt="" width="402" height="198"></p>
+<p class="MyNormal" style="text-align: justify;">&nbsp;</p>
+<p class="MyNormal" style="text-align: justify;">Данные также успешно передаются и возвращаются куда надо, не путаясь между собой.</p>
+<p class="MyNormal" style="text-align: justify;">Также мы видим, что в программе анализа трафика пакеты тоже проходят нормально&nbsp;(нажмите на картинку для увеличения изображения)</p>
+<p class="MyNormal" style="text-align: justify;">&nbsp;</p>
+<p class="MyNormal" style="text-align: center;"><a title="" href="https://narodstream.ru/wp-content/uploads/2018/06/stm124img11.png" class="highslide-image" onclick="return hs.expand(this);" target="" rel="lightbox"><img class="alignnone size-full wp-image-1402" title="" src="./narodstream.ru_files/stm124img11_0500.png" alt="" width="500" height="238"></a></p>
+<p class="MyNormal" style="text-align: justify;">&nbsp;</p>
+<p class="MyNormal" style="text-align: justify;">Закроем обе сессии и посмотрим корректность разрыва соединения&nbsp;(нажмите на картинку для увеличения изображения)</p>
+<p class="MyNormal" style="text-align: justify;">&nbsp;</p>
+<p class="MyNormal" style="text-align: center;"><a title="" href="https://narodstream.ru/wp-content/uploads/2018/06/stm124img12.png" class="highslide-image" onclick="return hs.expand(this);" target="" rel="lightbox"><img class="alignnone size-full wp-image-1404" title="" src="./narodstream.ru_files/stm124img12_0500.png" alt="" width="500" height="90"></a></p>
+<p class="MyNormal" style="text-align: justify;">&nbsp;</p>
+<p class="MyNormal" style="text-align: justify;">Итак, на данном занятии мы создали несложный, но в то же время способный корректно работать сервер TCP,&nbsp;с которым корректно соединяются и разъединяются клиенты, а также происходит обмен пакетами между узлами.</p>
+<p class="MyNormal" style="text-align: justify;">Всем спасибо за внимание!</p>
+<p class="MyNormal">&nbsp;</p>
+<p style="text-align: center;"><a class="button002" href="https://narodstream.ru/stm-urok-123-lan87xx-lwip-netconn-udp-soedinyaem-tri-kontrolera-chast-1/">Предыдущий урок</a>&nbsp;<a class="button001" href="https://narodstream.ru/programmirovanie-mk-stm32/">Программирование МК STM32</a>&nbsp;<a class="button002" href="https://narodstream.ru/stm-urok-125-lan8742a-lwip-netconn-tcp-client/">Следующий урок</a></p>
+<p class="MyNormal">&nbsp;</p>
+<p class="MyNormal" style="font-size: 18px;"><a href="https://narodstream.ru/arm/download/LESSON124/LAN8742_TCP_SERVER_NETCONN.ZIP" name="codelink"><span class="SpanBold">Исходный код</span></a></p>
+<p class="MyNormal">&nbsp;</p>
+<p class="MyNormal">&nbsp;</p>
+<p class="MyNormal">Отладочную плату можно приобрести здесь <a href="http://ali.pub/2bpa7g"><strong>32F746G-DISCOVERY</strong></a></p>
+<p class="MyNormal">&nbsp;</p>
+<p class="MyNormal">&nbsp;</p>
+<p class="MyNormal" style="font-size: 18px;"><strong>Смотреть ВИДЕОУРОК (нажмите на картинку)</strong></p>
+<p class="MyNormal">&nbsp;</p>
+<p class="MyNormal" style="font-size: 18px;"><a title="" href="https://youtu.be/YaHubGbNsGA" target="_blank" rel="noopener"><img class="alignnone size-full wp-image-789" title="STM LAN8742A. LWIP. NETCONN. TCP Server" src="./narodstream.ru_files/STM_PREVIEW_LESS0124_0256.jpg" alt="STM LAN8742A. LWIP. NETCONN. TCP Server" width="256" height="144"></a></p>
+<div class="post-views post-15671 entry-meta">
+			<span class="post-views-icon dashicons dashicons-visibility"></span>
+			<span class="post-views-label">Post Views: </span>
+			<span class="post-views-count">70</span>
+			</div>
+					
+									</div><!-- end of .post-entry -->
+
+				<div class="navigation">
+					<div class="previous">‹ <a href="https://narodstream.ru/pic-urok-17-mssp-spi-vneshnij-acp-mcp-3201-chast-2/" rel="prev">PIC. Урок 17. MSSP. SPI. Внешний АЦП MCP 3201. Часть 2</a></div>
+					<div class="next"><a href="https://narodstream.ru/pic-urok-18-mssp-spi-slave-soedinyaem-dva-kontrollera-chast-1/" rel="next">PIC. Урок 18. MSSP. SPI. SLAVE. Соединяем два контроллера. Часть 1</a> ›</div>
+				</div><!-- end of .navigation -->
+
+				
+	<div class="post-data">
+			</div><!-- end of .post-data -->
+
+<div class="post-edit"></div>
+							</div><!-- end of #post-15671 -->
+			
+						
+	<h6 id="comments">
+		8 комментариев на “<span>STM Урок 124. LAN8742A. LWIP. NETCONN. TCP Server</span>”	</h6>
+
+	
+	<ol class="commentlist">
+				<li class="comment even thread-even depth-1 parent" id="comment-4563">
+				<div id="div-comment-4563" class="comment-body">
+				<div class="comment-author vcard">
+			<img alt="" src="./narodstream.ru_files/e48a0e15e72b3c51ce0c906150e4288b.png" srcset="https://secure.gravatar.com/avatar/e48a0e15e72b3c51ce0c906150e4288b?s=120&amp;d=mm&amp;r=g 2x" class="avatar avatar-60 photo" height="60" width="60">			<cite class="fn">Евгений</cite><span class="says">:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="https://narodstream.ru/stm-urok-124-lan8742a-lwip-netconn-tcp-server/#comment-4563">
+			Сентябрь 19, 2018 в 12:50 пп</a>		</div>
+
+		<p>Здравствуйте, можете помочь?<br>
+Я реализовал TCP server и он работал, но в какой-то момент контроллер стал зависать  при попытке подключения ПК к контроллеру. Даже не знаю какие ещё входные данные предоставить. Базовые настройки размеров буферов в cubeMX для LWIP не менял.<br>
+Как я понял зависание происходит в netconn_accept(conn, &amp;newconn)<br>
+Кусок кода:<br>
+…<br>
+err = netconn_listen(conn);<br>
+if (err == ERR_OK)<br>
+{<br>
+  for (;;)<br>
+  {<br>
+    accept_err = netconn_accept(conn, &amp;newconn);<br>
+    if (accept_err == ERR_OK)<br>
+    {<br>
+…</p>
+
+		<div class="reply"><a rel="nofollow" class="comment-reply-link" href="https://narodstream.ru/stm-urok-124-lan8742a-lwip-netconn-tcp-server/?replytocom=4563#respond" onclick="return addComment.moveForm( &quot;div-comment-4563&quot;, &quot;4563&quot;, &quot;respond&quot;, &quot;15671&quot; )" aria-label="Комментарий к записи Евгений">Ответить</a></div>
+				</div>
+		<ul class="children">
+		<li class="comment odd alt depth-2" id="comment-5812">
+				<div id="div-comment-5812" class="comment-body">
+				<div class="comment-author vcard">
+			<img alt="" src="./narodstream.ru_files/6b7cb016c5fa176a9b3415f1f3a61484.png" srcset="https://secure.gravatar.com/avatar/6b7cb016c5fa176a9b3415f1f3a61484?s=120&amp;d=mm&amp;r=g 2x" class="avatar avatar-60 photo" height="60" width="60">			<cite class="fn">Евгений</cite><span class="says">:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="https://narodstream.ru/stm-urok-124-lan8742a-lwip-netconn-tcp-server/#comment-5812">
+			Февраль 5, 2019 в 1:16 пп</a>		</div>
+
+		<p>Работаю на F7, поборол эту проблему. Необходимо вытащить строку<br>
+accept_err = netconn_accept(conn, &amp;newconn);<br>
+из вечного цикла, достаточно запустить эту функцию один раз.</p>
+
+		<div class="reply"><a rel="nofollow" class="comment-reply-link" href="https://narodstream.ru/stm-urok-124-lan8742a-lwip-netconn-tcp-server/?replytocom=5812#respond" onclick="return addComment.moveForm( &quot;div-comment-5812&quot;, &quot;5812&quot;, &quot;respond&quot;, &quot;15671&quot; )" aria-label="Комментарий к записи Евгений">Ответить</a></div>
+				</div>
+		</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+		<li class="comment byuser comment-author-dnssnk even thread-odd thread-alt depth-1" id="comment-6977">
+				<div id="div-comment-6977" class="comment-body">
+				<div class="comment-author vcard">
+			<img alt="" src="./narodstream.ru_files/2072aa745397116a564bbc375ba45b04.png" srcset="https://secure.gravatar.com/avatar/2072aa745397116a564bbc375ba45b04?s=120&amp;d=mm&amp;r=g 2x" class="avatar avatar-60 photo" height="60" width="60">			<cite class="fn">Денис</cite><span class="says">:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="https://narodstream.ru/stm-urok-124-lan8742a-lwip-netconn-tcp-server/#comment-6977">
+			Май 29, 2019 в 4:30 пп</a>		</div>
+
+		<p>Хочу указать на небольшую неточность в примере, которая мне, как начинающему с lwip, доставила немало хлопот.</p>
+<p>Функция netconn_close(newconn) разрывает соединение, но не удаляет его структуру. При разрыве соединения и новом подключении снова вызывается функция netconn_accept, которая создает новую структуру и их общее количество в стеке увеличивается на единицу. Количество структур ограничено значением MEMP_NUM_NETBUF. При достижении этого числа, структуры перестают создаваться, а следовательно, клиенту отказывается в подключении.<br>
+Проблема решается добавлением команды netconn_delete(newconn) после netconn_close(newconn).<br>
+Возможно, эта проблема имеет те же корни что и проблема предыдущего пользователя. Не знаю только, чьё решение более верное.</p>
+
+		<div class="reply"><a rel="nofollow" class="comment-reply-link" href="https://narodstream.ru/stm-urok-124-lan8742a-lwip-netconn-tcp-server/?replytocom=6977#respond" onclick="return addComment.moveForm( &quot;div-comment-6977&quot;, &quot;6977&quot;, &quot;respond&quot;, &quot;15671&quot; )" aria-label="Комментарий к записи Денис">Ответить</a></div>
+				</div>
+		</li><!-- #comment-## -->
+		<li class="comment odd alt thread-even depth-1 parent" id="comment-7332">
+				<div id="div-comment-7332" class="comment-body">
+				<div class="comment-author vcard">
+			<img alt="" src="./narodstream.ru_files/fd00afc79ea5ddc2abb8499601a353f2.png" srcset="https://secure.gravatar.com/avatar/fd00afc79ea5ddc2abb8499601a353f2?s=120&amp;d=mm&amp;r=g 2x" class="avatar avatar-60 photo" height="60" width="60">			<cite class="fn">Ford</cite><span class="says">:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="https://narodstream.ru/stm-urok-124-lan8742a-lwip-netconn-tcp-server/#comment-7332">
+			Август 14, 2019 в 4:52 пп</a>		</div>
+
+		<p>Здравствуйте. Как можно сделать на данной библиотеке LWIP. NETCONN. одновременно сервер и клиент?</p>
+
+		<div class="reply"><a rel="nofollow" class="comment-reply-link" href="https://narodstream.ru/stm-urok-124-lan8742a-lwip-netconn-tcp-server/?replytocom=7332#respond" onclick="return addComment.moveForm( &quot;div-comment-7332&quot;, &quot;7332&quot;, &quot;respond&quot;, &quot;15671&quot; )" aria-label="Комментарий к записи Ford">Ответить</a></div>
+				</div>
+		<ul class="children">
+		<li class="comment byuser comment-author-admin bypostauthor even depth-2" id="comment-7338">
+				<div id="div-comment-7338" class="comment-body">
+				<div class="comment-author vcard">
+			<img alt="" src="./narodstream.ru_files/4824b24065500834db4b9f331b608833(1).jpeg" srcset="https://secure.gravatar.com/avatar/4824b24065500834db4b9f331b608833?s=120&amp;d=mm&amp;r=g 2x" class="avatar avatar-60 photo" height="60" width="60">			<cite class="fn"><a href="https://narodstream.ru/" rel="external nofollow" class="url">Narod Stream</a></cite><span class="says">:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="https://narodstream.ru/stm-urok-124-lan8742a-lwip-netconn-tcp-server/#comment-7338">
+			Август 15, 2019 в 10:39 дп</a>		</div>
+
+		<p>Здравствуйте!<br>
+Одновременно в одной сети скорей всего никак. Только по очереди. А это переинициализация. Да и вряд ли это нужно для чего-нибудь. Особенно в одной сети. Чтобы перейти в режим клиента, надо убедиться, что никто соединиться не попытается, а это значит, что всем надо об этом сообщить. Думаю, что переобуться в прыжке легче.</p>
+
+		<div class="reply"><a rel="nofollow" class="comment-reply-link" href="https://narodstream.ru/stm-urok-124-lan8742a-lwip-netconn-tcp-server/?replytocom=7338#respond" onclick="return addComment.moveForm( &quot;div-comment-7338&quot;, &quot;7338&quot;, &quot;respond&quot;, &quot;15671&quot; )" aria-label="Комментарий к записи Narod Stream">Ответить</a></div>
+				</div>
+		</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+		<li class="comment odd alt thread-odd thread-alt depth-1 parent" id="comment-7762">
+				<div id="div-comment-7762" class="comment-body">
+				<div class="comment-author vcard">
+			<img alt="" src="./narodstream.ru_files/e24ea56c9bf145d6b8fa2eb8505f473e.png" srcset="https://secure.gravatar.com/avatar/e24ea56c9bf145d6b8fa2eb8505f473e?s=120&amp;d=mm&amp;r=g 2x" class="avatar avatar-60 photo" height="60" width="60">			<cite class="fn">jc</cite><span class="says">:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="https://narodstream.ru/stm-urok-124-lan8742a-lwip-netconn-tcp-server/#comment-7762">
+			Ноябрь 7, 2019 в 1:56 пп</a>		</div>
+
+		<p>Please, give me an advice. The example worked until I ended the connection on the client's side. Then it was no longer possible to connect.</p>
+
+		<div class="reply"><a rel="nofollow" class="comment-reply-link" href="https://narodstream.ru/stm-urok-124-lan8742a-lwip-netconn-tcp-server/?replytocom=7762#respond" onclick="return addComment.moveForm( &quot;div-comment-7762&quot;, &quot;7762&quot;, &quot;respond&quot;, &quot;15671&quot; )" aria-label="Комментарий к записи jc">Ответить</a></div>
+				</div>
+		<ul class="children">
+		<li class="comment even depth-2" id="comment-7788">
+				<div id="div-comment-7788" class="comment-body">
+				<div class="comment-author vcard">
+			<img alt="" src="./narodstream.ru_files/e24ea56c9bf145d6b8fa2eb8505f473e.png" srcset="https://secure.gravatar.com/avatar/e24ea56c9bf145d6b8fa2eb8505f473e?s=120&amp;d=mm&amp;r=g 2x" class="avatar avatar-60 photo" height="60" width="60">			<cite class="fn">jc</cite><span class="says">:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="https://narodstream.ru/stm-urok-124-lan8742a-lwip-netconn-tcp-server/#comment-7788">
+			Ноябрь 11, 2019 в 8:26 дп</a>		</div>
+
+		<p>Oh, ok. That is it, when I don't read forum posts. Resolved see. above. Add the command netconn_delete (newconn) before netconn_close (newconn).</p>
+
+		<div class="reply"><a rel="nofollow" class="comment-reply-link" href="https://narodstream.ru/stm-urok-124-lan8742a-lwip-netconn-tcp-server/?replytocom=7788#respond" onclick="return addComment.moveForm( &quot;div-comment-7788&quot;, &quot;7788&quot;, &quot;respond&quot;, &quot;15671&quot; )" aria-label="Комментарий к записи jc">Ответить</a></div>
+				</div>
+		</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+		<li class="comment odd alt thread-even depth-1" id="comment-7789">
+				<div id="div-comment-7789" class="comment-body">
+				<div class="comment-author vcard">
+			<img alt="" src="./narodstream.ru_files/e24ea56c9bf145d6b8fa2eb8505f473e.png" srcset="https://secure.gravatar.com/avatar/e24ea56c9bf145d6b8fa2eb8505f473e?s=120&amp;d=mm&amp;r=g 2x" class="avatar avatar-60 photo" height="60" width="60">			<cite class="fn">jc</cite><span class="says">:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="https://narodstream.ru/stm-urok-124-lan8742a-lwip-netconn-tcp-server/#comment-7789">
+			Ноябрь 11, 2019 в 8:36 дп</a>		</div>
+
+		<p>not before, after is correct</p>
+
+		<div class="reply"><a rel="nofollow" class="comment-reply-link" href="https://narodstream.ru/stm-urok-124-lan8742a-lwip-netconn-tcp-server/?replytocom=7789#respond" onclick="return addComment.moveForm( &quot;div-comment-7789&quot;, &quot;7789&quot;, &quot;respond&quot;, &quot;15671&quot; )" aria-label="Комментарий к записи jc">Ответить</a></div>
+				</div>
+		</li><!-- #comment-## -->
+	</ol>
+
+	
+
+
+
+		<div id="respond" class="comment-respond">
+		<h3 id="reply-title" class="comment-reply-title">Добавить комментарий <small><a rel="nofollow" id="cancel-comment-reply-link" href="https://narodstream.ru/stm-urok-124-lan8742a-lwip-netconn-tcp-server/#respond" style="display:none;">Отменить ответ</a></small></h3>			<form action="https://narodstream.ru/wp-comments-post.php" method="post" id="commentform" class="comment-form">
+				<p class="comment-notes"><span id="email-notes">Ваш e-mail не будет опубликован.</span> Обязательные поля помечены <span class="required">*</span></p><p class="comment-form-comment"><label for="comment">Комментарий</label> <textarea id="comment" name="comment" cols="45" rows="8" maxlength="65525" required="required"></textarea></p><p class="comment-form-author"><label for="author">Имя</label> <span class="required">*</span><input id="author" name="author" type="text" value="" size="30"></p>
+<p class="comment-form-email"><label for="email">E-mail</label> <span class="required">*</span><input id="email" name="email" type="text" value="" size="30"></p>
+<p class="comment-form-url"><label for="url">Сайт</label><input id="url" name="url" type="text" value="" size="30"></p>
+<p class="cptch_block"><span class="cptch_wrap cptch_math_actions">
+				<label class="cptch_label" for="cptch_input_15"><span class="cptch_span"><input id="cptch_input_15" class="cptch_input cptch_wp_comments" type="text" autocomplete="off" name="cptch_number" value="" maxlength="2" size="2" aria-required="true" required="required" style="margin-bottom:0;display:inline;font-size: 12px;width: 40px;"></span>
+					<span class="cptch_span">&nbsp;×&nbsp;</span>
+					<span class="cptch_span">3</span>
+					<span class="cptch_span">&nbsp;=&nbsp;</span>
+					<span class="cptch_span">пятнадцать</span>
+					<input type="hidden" name="cptch_result" value="52s="><input type="hidden" name="cptch_time" value="1649688586">
+					<input type="hidden" name="cptch_form" value="wp_comments">
+				</label><span class="cptch_reload_button_wrap hide-if-no-js">
+					<noscript>
+						<style type="text/css">
+							.hide-if-no-js {
+								display: none !important;
+							}
+						</style>
+					</noscript>
+					<span class="cptch_reload_button dashicons dashicons-update"></span>
+				</span></span></p><p class="form-submit"><input name="submit" type="submit" id="submit" class="submit" value="Отправить комментарий"> <input type="hidden" name="comment_post_ID" value="15671" id="comment_post_ID">
+<input type="hidden" name="comment_parent" id="comment_parent" value="0">
+</p><p style="display: none;"><input type="hidden" id="akismet_comment_nonce" name="akismet_comment_nonce" value="c4aa80c2ed"></p><p style="display: none;"></p>			<input type="hidden" id="ak_js" name="ak_js" value="1649688585699"></form>
+			</div><!-- #respond -->
+	
+
+			
+		
+</div><!-- end of #content -->
+
+
+	<div id="widgets" class="grid col-300 fit" role="complementary">
+		
+		<div id="meta-2" class="widget-wrapper widget_meta"><div class="widget-title"><h3>Мета</h3></div>			<ul>
+			<li><a href="https://narodstream.ru/wp-login.php?action=register&amp;itsec-hb-token=wp-signup.php">Регистрация</a></li>			<li><a href="https://narodstream.ru/wp-login.php?itsec-hb-token=narodstream12345">Войти</a></li>
+			<li><a href="https://narodstream.ru/feed/"><abbr title="Really Simple Syndication">RSS</abbr> записей</a></li>
+			<li><a href="https://narodstream.ru/comments/feed/"><abbr title="Really Simple Syndication">RSS</abbr> комментариев</a></li>
+			<li><a href="https://ru.wordpress.org/" title="Сайт работает на WordPress — современной персональной платформе для публикаций.">WordPress.org</a></li>			</ul>
+			</div><div id="search-2" class="widget-wrapper widget_search"><form method="get" id="searchform" action="https://narodstream.ru/">
+	<label class="screen-reader-text" for="s">Найти:</label>
+	<input type="text" class="field" name="s" id="s" placeholder="искать здесь …">
+	<input type="submit" class="submit" name="submit" id="searchsubmit" value="Фильтровать">
+</form>
+</div><div id="text-8" class="widget-wrapper widget_text">			<div class="textwidget"><p style="text-align: center; font-size: 14px;">
+	<strong>Уроки по программированию </strong>
+</p>
+<p class="MyNormal">
+	&nbsp;
+</p>
+<p style="text-align: center;">
+<a class="button001" style="font-size: 20px;" href="https://narodstream.ru/programmirovanie_n_c/">&nbsp;&nbsp;&nbsp;&nbsp;Программирование на C&nbsp;&nbsp;&nbsp;&nbsp;</a>
+</p>
+<p class="MyNormal">
+	&nbsp;
+</p>
+<p style="text-align: center; font-size: 14px;">
+	<strong>Уроки по программированию МК</strong>
+</p>
+<p class="MyNormal">
+	&nbsp;
+</p>
+<p style="text-align: center;">
+<a class="button001" href="https://narodstream.ru/programmirovanie-mk-avr/"> &nbsp;&nbsp;Программирование МК AVR&nbsp;&nbsp;</a>
+</p>
+<p class="MyNormal">
+	&nbsp;
+</p>
+<p style="text-align: center;">
+<a class="button001" style="font-size: 18px;" href="https://narodstream.ru/programmirovanie-mk-stm32/">&nbsp;&nbsp;Программирование МК STM32&nbsp;&nbsp;</a>
+</p>
+<p class="MyNormal">
+	&nbsp;
+</p>
+<p style="text-align: center;">
+<a class="button001" style="font-size: 20px;" href="https://narodstream.ru/programmirovanie-mk-pic/"> &nbsp;&nbsp;Программирование МК PIC&nbsp;</a>
+</p>
+<p class="MyNormal">
+	&nbsp;
+</p>
+<p style="text-align: center;">
+<a class="button001" style="font-size: 18px;" href="https://narodstream.ru/programmirovanie-mk-esp8266/"> &nbsp;&nbsp;Программирование МК ESP8266&nbsp;</a>
+</p>
+<p class="MyNormal">
+	&nbsp;
+</p>
+<p style="text-align: center;">
+<a class="button001" style="font-size: 18px;" href="https://narodstream.ru/programmirovanie-mk-esp32/"> &nbsp;&nbsp;Программирование МК ESP32&nbsp;</a>
+</p>
+<p class="MyNormal">
+	&nbsp;
+</p>
+<p style="text-align: center; font-size: 14px;">
+	<strong>Прочее </strong>
+</p>
+<p class="MyNormal">
+	&nbsp;
+</p>
+<p style="text-align: center;">
+<a class="button001" style="font-size: 18px;" href="https://narodstream.ru/testy-ustrojstv-aksessuarov/">&nbsp;Тесты устройств и аксессуаров&nbsp;</a>
+</p>
+<p class="MyNormal">
+	&nbsp;
+</p>
+<p style="text-align: center;">
+<a class="button001" style="font-size: 18px;" href="https://narodstream.ru/poleznie-statji-podpischikov/">&nbsp;Полезные статьи подписчиков&nbsp;</a>
+</p></div>
+		</div><div id="text-10" class="widget-wrapper widget_text">			<div class="textwidget"><!-- Yandex.RTB R-A-232869-1 -->
+<div id="yandex_rtb_R-A-232869-1"></div>
+<script type="text/javascript">
+    (function(w, d, n, s, t) {
+        w[n] = w[n] || [];
+        w[n].push(function() {
+            Ya.Context.AdvManager.render({
+                blockId: "R-A-232869-1",
+                renderTo: "yandex_rtb_R-A-232869-1",
+                horizontalAlign: false,
+                async: true
+            });
+        });
+        t = d.getElementsByTagName("script")[0];
+        s = d.createElement("script");
+        s.type = "text/javascript";
+        s.src = "//an.yandex.ru/system/context.js";
+        s.async = true;
+        t.parentNode.insertBefore(s, t);
+    })(this, this.document, "yandexContextAsyncCallbacks");
+</script></div>
+		</div><div id="text-4" class="widget-wrapper widget_text">			<div class="textwidget"><p style="text-align: center; font-size: 24px;"><a href="https://www.youtube.com/channel/UCXgs4exdtMpz4ccBZS3Yp4g" target="_blank"><span style="font-weight: bold;">Заходите на канал Narod Stream</span></a></p>
+<p class="MyNoIndent">&nbsp;<a href="https://www.youtube.com/channel/UCXgs4exdtMpz4ccBZS3Yp4g" target="_blank"><img class="alignnone wp-image-48 size-full" src="./narodstream.ru_files/1234.png" width="440" height="298"></a></p>
+<p class="MyNoIndent"></p></div>
+		</div><div id="text-11" class="widget-wrapper widget_text">			<div class="textwidget"><script async="" src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- Адаптивный в сайдбаре 1 -->
+<ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-3143654745828348" data-ad-slot="4200166713" data-ad-format="auto"></ins>
+<script></div>
+		</div><div id="categories-3" class="widget-wrapper widget_categories"><div class="widget-title"><h3>Рубрики</h3></div>		<ul>
+	<li class="cat-item cat-item-43"><a href="https://narodstream.ru/1-wire/" >1-WIRE</a> (3)
+</li>
+	<li class="cat-item cat-item-44"><a href="https://narodstream.ru/adc/" >ADC</a> (26)
+</li>
+	<li class="cat-item cat-item-109"><a href="https://narodstream.ru/android-prilozheniya/" >Android приложения</a> (1)
+</li>
+	<li class="cat-item cat-item-105"><a href="https://narodstream.ru/assembler/" >Assembler</a> (7)
+</li>
+	<li class="cat-item cat-item-45"><a href="https://narodstream.ru/dac/" >DAC</a> (4)
+</li>
+	<li class="cat-item cat-item-47"><a href="https://narodstream.ru/freertos/" >FreeRTOS</a> (37)
+</li>
+	<li class="cat-item cat-item-42"><a href="https://narodstream.ru/gpio/" >GPIO</a> (46)
+</li>
+	<li class="cat-item cat-item-38"><a href="https://narodstream.ru/i2c/" >I2C</a> (42)
+</li>
+	<li class="cat-item cat-item-51"><a href="https://narodstream.ru/lan/" >LAN</a> (26)
+</li>
+	<li class="cat-item cat-item-39"><a href="https://narodstream.ru/spi/" >SPI</a> (50)
+</li>
+	<li class="cat-item cat-item-40"><a href="https://narodstream.ru/usart/" >USART</a> (26)
+</li>
+	<li class="cat-item cat-item-8"><a href="https://narodstream.ru/rub_avr/" title="Программирование микроконтроллеров AVR и все, что с ним связано">Программирование AVR</a> (140)
+</li>
+	<li class="cat-item cat-item-123"><a href="https://narodstream.ru/programmirovanie-esp32/" >Программирование ESP32</a> (4)
+</li>
+	<li class="cat-item cat-item-67"><a href="https://narodstream.ru/programmirovanie-esp8266/" >Программирование ESP8266</a> (33)
+</li>
+	<li class="cat-item cat-item-17"><a href="https://narodstream.ru/programmirovanie-pic/" >Программирование PIC</a> (43)
+</li>
+	<li class="cat-item cat-item-7"><a href="https://narodstream.ru/rub_stm32/" title="Программирование микроконтроллеров STM32 и все, что с ним связано">Программирование STM32</a> (369)
+</li>
+	<li class="cat-item cat-item-71"><a href="https://narodstream.ru/programmirovanie-na-c/" >Программирование на C</a> (45)
+</li>
+	<li class="cat-item cat-item-28"><a href="https://narodstream.ru/testy-ustrojstv-i-aksessuarov/" >Тесты устройств и аксессуаров</a> (1)
+</li>
+		</ul>
+</div><div id="text-3" class="widget-wrapper widget_text">			<div class="textwidget"><!--LiveInternet counter--><script type="text/javascript"><!--
+document.write("<a href='//www.liveinternet.ru/click' "+
+"target=_blank><img src='//counter.yadro.ru/hit?t29.20;r"+
+escape(document.referrer)+((typeof(screen)=="undefined")?"":
+";s"+screen.width+"*"+screen.height+"*"+(screen.colorDepth?
+screen.colorDepth:screen.pixelDepth))+";u"+escape(document.URL)+
+";"+Math.random()+
+"' alt='' title='LiveInternet: показано количество просмотров и"+
+" посетителей' "+
+"border='0' width='88' height='120'><\/a>")
+//--></script><!--/LiveInternet-->
+
+</div>
+		</div><div id="text-14" class="widget-wrapper widget_text"><div class="widget-title"><h3>Вы можете помочь проекту Narod Stream</h3></div>			<div class="textwidget"><p>ЮMoney<br>
+<iframe src="./narodstream.ru_files/shop-widget.html" width="260px" height="230px" frameborder="2" scrolling="no"></iframe></p>
+</div>
+		</div><div id="text-13" class="widget-wrapper widget_text" style="position: static;">			<div class="textwidget"><p class="MyNormal">
+	&nbsp;
+</p>
+<!-- Yandex.RTB R-A-232869-2 -->
+<div id="yandex_rtb_R-A-232869-2"></div>
+<script type="text/javascript">
+    (function(w, d, n, s, t) {
+        w[n] = w[n] || [];
+        w[n].push(function() {
+            Ya.Context.AdvManager.render({
+                blockId: "R-A-232869-2",
+                renderTo: "yandex_rtb_R-A-232869-2",
+                async: true
+            });
+        });
+        t = d.getElementsByTagName("script")[0];
+        s = d.createElement("script");
+        s.type = "text/javascript";
+        s.src = "//an.yandex.ru/system/context.js";
+        s.async = true;
+        t.parentNode.insertBefore(s, t);
+    })(this, this.document, "yandexContextAsyncCallbacks");
+</script></div>
+		</div>
+			</div><!-- end of #widgets -->
+</div>
+</div><!-- end of #wrapper -->
+
+	 
+</div><!-- end of #container -->
+
+<div id="footer" class="clearfix" role="contentinfo">
+	
+	<div id="footer-wrapper">
+	
+		 <!--   main-->
+		
+		<div id="content-outer">			
+				</div>
+		<div id="content-outer">
+		<div class="grid col-940">
+
+			<div class="grid col-540">
+				<ul id="menu-glavnoe-menyu-1" class="footer-menu"><li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-8"><a href="https://narodstream.ru/">Главная</a></li>
+<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-10"><a href="https://narodstream.ru/novosti/">Новости</a></li>
+<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-22"><a href="https://narodstream.ru/stm-urok-124-lan8742a-lwip-netconn-tcp-server/#">Уроки по программированию</a>
+<ul class="sub-menu">
+	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-18007"><a href="https://narodstream.ru/programmirovanie_n_c/">Программирование на C</a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-30"><a href="https://narodstream.ru/programmirovanie-mk-avr/">Программирование микроконтроллеров AVR</a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-55"><a href="https://narodstream.ru/programmirovanie-mk-stm32/">Программирование микроконтроллеров  STM32</a></li>
+	<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-27"><a href="https://narodstream.ru/programmirovanie-mk-pic/">Программирование микроконтроллеров PIC</a></li>
+	<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-17793"><a href="https://narodstream.ru/programmirovanie-mk-esp8266/">Программирование микроконтроллеров ESP8266</a></li>
+	<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-22701"><a href="https://narodstream.ru/programmirovanie-mk-esp32/">Программирование микроконтроллеров ESP32</a></li>
+</ul>
+</li>
+<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-14033"><a href="https://narodstream.ru/programmirovanie-ustrojstv-i-interfejsov/">Устройства и интерфейсы</a></li>
+<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-18092"><a href="http://no/">Прочее</a>
+<ul class="sub-menu">
+	<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-11516"><a href="https://narodstream.ru/testy-ustrojstv-aksessuarov/">Тесты устройств и аксессуаров</a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-17435"><a href="https://narodstream.ru/poleznie-statji-podpischikov/">Полезные статьи подписчиков</a></li>
+</ul>
+</li>
+<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-23"><a href="https://narodstream.ru/ssylki/">Ссылки</a></li>
+<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-7804"><a href="https://narodstream.ru/forums/forum/programmirovanie-mikrokontrollerov/">Форум</a></li>
+<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-13295"><a href="https://narodstream.ru/help/">Помощь</a></li>
+</ul>			</div><!-- end of col-540 -->
+
+			<div class="grid col-380 fit">
+				<ul class="social-icons"><li class="facebook-icon"><a href="https://www.facebook.com/groups/236905359999556/"><img src="./narodstream.ru_files/facebook-icon.png" width="24" height="24" alt="Facebook"></a></li><li class="youtube-icon"><a href="https://www.youtube.com/channel/UCXgs4exdtMpz4ccBZS3Yp4g"><img src="./narodstream.ru_files/youtube-icon.png" width="24" height="24" alt="YouTube"></a></li></ul><!-- .social-icons -->			</div><!-- end of col-380 fit -->
+
+		</div><!-- end of col-940 -->
+			<div id="colophon-widget" class="grid col-940">
+		
+		
+			<div id="text-5" class="colophon-widget widget-wrapper widget_text">			<div class="textwidget"><!-- Yandex.Metrika informer -->
+<a href="https://metrika.yandex.ru/stat/?id=40778204&amp;from=informer" target="_blank" rel="nofollow"><img src="./narodstream.ru_files/3_1_FFFFFFFF_EFEFEFFF_0_pageviews" style="width:88px; height:31px; border:0;" alt="Яндекс.Метрика" title="Яндекс.Метрика: данные за сегодня (просмотры, визиты и уникальные посетители)" class="ym-advanced-informer" data-cid="40778204" data-lang="ru"></a>
+<!-- /Yandex.Metrika informer -->
+
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function (d, w, c) {
+        (w[c] = w[c] || []).push(function() {
+            try {
+                w.yaCounter40778204 = new Ya.Metrika({
+                    id:40778204,
+                    clickmap:true,
+                    trackLinks:true,
+                    accurateTrackBounce:true,
+                    webvisor:true
+                });
+            } catch(e) { }
+        });
+
+        var n = d.getElementsByTagName("script")[0],
+            s = d.createElement("script"),
+            f = function () { n.parentNode.insertBefore(s, n); };
+        s.type = "text/javascript";
+        s.async = true;
+        s.src = "https://mc.yandex.ru/metrika/watch.js";
+
+        if (w.opera == "[object Opera]") {
+            d.addEventListener("DOMContentLoaded", f, false);
+        } else { f(); }
+    })(document, window, "yandex_metrika_callbacks");
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/40778204" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter --></div>
+		</div>
+		
+			</div><!-- end of #colophon-widget -->
+
+		<div class="grid col-300 copyright">
+			© 2022<a id="copyright_link" href="https://narodstream.ru/" title="Программирование микроконтроллеров"> Narod Stream</a>
+		</div><!-- end of .copyright -->
+
+		<div class="grid col-300 scroll-top"><!--<a href="#scroll-top" title="прокрутка наверх">&#8679;</a>
+		<div id="scroll-to-top"><span class="glyphicon glyphicon-chevron-up"></span></div>--></div>
+
+		<div class="grid col-300 fit powered" style="display: none;">
+			<a href="http://cyberchimps.com/responsive-theme/" title="Тема Responsive" rel="noindex, nofollow">Responsive Theme</a>
+			создано с помощью <a href="http://wordpress.org/" title="WordPress">
+				WordPress</a>
+		</div><!-- end .powered -->
+	</div>
+		
+	</div><!-- end #footer-wrapper -->
+
+	</div><!-- end #footer -->
+<div id="scroll" title="Scroll to Top" style="display: none;"><a>Наверх</a></div>
+<script type="text/javascript" src="./narodstream.ru_files/responsive-scripts.min.js.Без названия"></script>
+<script type="text/javascript" src="./narodstream.ru_files/jquery.placeholder.min.js.Без названия"></script>
+<script type="text/javascript" src="./narodstream.ru_files/comment-reply.min.js.Без названия"></script>
+<script type="text/javascript" src="./narodstream.ru_files/wp-embed.min.js.Без названия"></script>
+<script async="async" type="text/javascript" src="./narodstream.ru_files/form.js.Без названия"></script>
+<script type="text/javascript">
+/* <![CDATA[ */
+var cptch_vars = {"nonce":"f5d039f36d","ajaxurl":"https:\/\/narodstream.ru\/wp-admin\/admin-ajax.php","enlarge":""};
+/* ]]> */
+</script>
+<script type="text/javascript" src="./narodstream.ru_files/front_end_script.js.Без названия"></script>
+<!--
+<p class="MyNormalSmall">
+-->
+<p class="MyNormalSmall">
+<!--
+80.80.196.177; country: RU.-->
+<!--
+ID country: 185-->
+</p>
+<p class="MyNormalSmall">
+</p>
+<!--
+</p>
+-->
+<script type="text/javascript">
+	jQuery(document).ready(function() {
+		jQuery('.spoiler-body').hide()
+		jQuery('.spoiler-head').click(function(){
+			jQuery(this).toggleClass("folded").toggleClass("unfolded").next().toggle()
+	})
+})
+</script>
+
+<script>
+window.onscroll = function() {
+	var a = document.getElementById("text-14");
+	var b = document.getElementById("text-13");
+	var v = a.getBoundingClientRect();
+	var w = b.getBoundingClientRect();
+	if(v.bottom<=-10)
+	{
+		b.style.position = "fixed";
+		console.log(w.top);
+	}
+	else
+	{
+		b.style.position = "static";
+	}
+}
+</script>
+
+
+
+
+<!-- Dynamic page generated in 0.335 seconds. -->
+<!-- Cached page generated by WP-Super-Cache on 2022-04-11 14:49:46 -->
+
+<!-- Compression = gzip --><div style="padding: 0px; border: none; margin: 0px; position: absolute; left: 0px; top: 0px; width: 100%; z-index: 1001;"><a class="highslide-loading" title="Click to cancel" href="javascript:;" style="position: absolute; top: -9999px; opacity: 0.75; z-index: 1;">Загрузка...</a><div style="display: none;"></div><table cellspacing="0" style="padding: 0px; border: none; margin: 0px; visibility: hidden; position: absolute; border-collapse: collapse;"><tbody style="padding: 0px; border: none; margin: 0px;"><tr style="padding: 0px; border: none; margin: 0px; height: auto;"><td style="padding: 0px; border: none; margin: 0px; line-height: 0; font-size: 0px; background: url(&quot;https://narodstream.ru/wp-content/plugins/auto-highslide/highslide/graphics/outlines/rounded-white.png&quot;) 0px 0px; height: 20px; width: 20px;"></td><td style="padding: 0px; border: none; margin: 0px; line-height: 0; font-size: 0px; background: url(&quot;https://narodstream.ru/wp-content/plugins/auto-highslide/highslide/graphics/outlines/rounded-white.png&quot;) 0px -40px; height: 20px; width: 20px;"></td><td style="padding: 0px; border: none; margin: 0px; line-height: 0; font-size: 0px; background: url(&quot;https://narodstream.ru/wp-content/plugins/auto-highslide/highslide/graphics/outlines/rounded-white.png&quot;) -20px 0px; height: 20px; width: 20px;"></td></tr><tr style="padding: 0px; border: none; margin: 0px; height: auto;"><td style="padding: 0px; border: none; margin: 0px; line-height: 0; font-size: 0px; background: url(&quot;https://narodstream.ru/wp-content/plugins/auto-highslide/highslide/graphics/outlines/rounded-white.png&quot;) 0px -80px; height: 20px; width: 20px;"></td><td class="rounded-white" style="padding: 0px; border: none; margin: 0px; position: relative;"></td><td style="padding: 0px; border: none; margin: 0px; line-height: 0; font-size: 0px; background: url(&quot;https://narodstream.ru/wp-content/plugins/auto-highslide/highslide/graphics/outlines/rounded-white.png&quot;) -20px -80px; height: 20px; width: 20px;"></td></tr><tr style="padding: 0px; border: none; margin: 0px; height: auto;"><td style="padding: 0px; border: none; margin: 0px; line-height: 0; font-size: 0px; background: url(&quot;https://narodstream.ru/wp-content/plugins/auto-highslide/highslide/graphics/outlines/rounded-white.png&quot;) 0px -20px; height: 20px; width: 20px;"></td><td style="padding: 0px; border: none; margin: 0px; line-height: 0; font-size: 0px; background: url(&quot;https://narodstream.ru/wp-content/plugins/auto-highslide/highslide/graphics/outlines/rounded-white.png&quot;) 0px -60px; height: 20px; width: 20px;"></td><td style="padding: 0px; border: none; margin: 0px; line-height: 0; font-size: 0px; background: url(&quot;https://narodstream.ru/wp-content/plugins/auto-highslide/highslide/graphics/outlines/rounded-white.png&quot;) -20px -20px; height: 20px; width: 20px;"></td></tr></tbody></table></div></body></html>

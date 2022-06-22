@@ -1,0 +1,10 @@
+01:31:53 **** Incremental Build of configuration Debug for project TCPServer ****
+make -j16 all 
+arm-none-eabi-size   TCPServer.elf 
+   text	   data	    bss	    dec	    hex	filename
+  75940	    128	  52424	 128492	  1f5ec	TCPServer.elf
+Finished building: default.size.stdout
+ 
+
+01:31:54 Build Finished. 0 errors, 0 warnings. (took 1s.105ms)
+

@@ -1,0 +1,69 @@
+<html>
+<body>
+<pre>
+<h1>µVision Build Log</h1>
+<h2>Tool Versions:</h2>
+IDE-Version: µVision V5.35.0.0
+Copyright (C) 2021 ARM Ltd and ARM Germany GmbH. All rights reserved.
+License Information: Alexey Emelyanov, strela, LIC=7YKYW-QJRJH-MSLYP-MQHV5-3ITF3-TB5M0
+ 
+Tool Versions:
+Toolchain:       MDK-ARM Professional  Version: 5.35.0.2
+Toolchain Path:  C:\Keil_v5\ARM\ARMCC\Bin
+C Compiler:      Armcc.exe V5.06 update 7 (build 960)
+Assembler:       Armasm.exe V5.06 update 7 (build 960)
+Linker/Locator:  ArmLink.exe V5.06 update 7 (build 960)
+Library Manager: ArmAr.exe V5.06 update 7 (build 960)
+Hex Converter:   FromElf.exe V5.06 update 7 (build 960)
+CPU DLL:         SARMCM3.DLL V5.35.0.2
+Dialog DLL:      DCM.DLL V1.17.3.0
+Target DLL:      STLink\ST-LINKIII-KEIL_SWO.dll V3.0.9.0
+Dialog DLL:      TCM.DLL V1.53.0.0
+ 
+<h2>Project:</h2>
+C:\MYFILE\Program\Program Embedded system\STM32F767ZI\LearnTest2\MDK-ARM\LearnTest2.uvprojx
+Project File Date:  09/22/2021
+
+<h2>Output:</h2>
+*** Using Compiler 'V5.06 update 7 (build 960)', folder: 'C:\Keil_v5\ARM\ARMCC\Bin'
+Build target 'LearnTest2'
+compiling main.c...
+../Src/main.c(77): warning:  #223-D: function "strlen" declared implicitly
+    es->p_tx = pbuf_alloc(PBUF_TRANSPORT, strlen((char*)data) , PBUF_POOL);
+../Src/main.c(133): warning:  #223-D: function "strncpy" declared implicitly
+    strncpy(str1,es->p_tx->payload,es->p_tx->len);
+../Src/main.c(235): warning:  #223-D: function "strlen" declared implicitly
+    tcp_write(client_pcb, (void*)buf_str, strlen(buf_str), 1);
+../Src/main.c(252): warning:  #177-D: variable "send"  was declared but never referenced
+  	char send=0xFF;
+../Src/main.c: 4 warnings, 0 errors
+linking...
+Program Size: Code=39036 RO-data=1104 RW-data=208 ZI-data=44160  
+FromELF: creating hex file...
+"LearnTest2\LearnTest2.axf" - 0 Error(s), 4 Warning(s).
+
+<h2>Software Packages used:</h2>
+
+Package Vendor: ARM
+                http://www.keil.com/pack/ARM.CMSIS.5.8.0.pack
+                ARM.CMSIS.5.8.0
+                CMSIS (Common Microcontroller Software Interface Standard)
+   * Component: CORE Version: 5.5.0
+
+Package Vendor: Keil
+                http://www.keil.com/pack/Keil.STM32F7xx_DFP.2.14.0.pack
+                Keil.STM32F7xx_DFP.2.14.0
+                STMicroelectronics STM32F7 Series Device Support, Drivers and Examples
+
+<h2>Collection of Component include folders:</h2>
+  .\RTE\_LearnTest2
+  C:\Users\viilt\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include
+  C:\Users\viilt\AppData\Local\Arm\Packs\Keil\STM32F7xx_DFP\2.14.0\Drivers\CMSIS\Device\ST\STM32F7xx\Include
+
+<h2>Collection of Component Files used:</h2>
+
+   * Component: ARM::CMSIS:CORE:5.5.0
+Build Time Elapsed:  00:00:03
+</pre>
+</body>
+</html>
